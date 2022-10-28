@@ -1,0 +1,53 @@
+@model IEnumerable<cadAp2.Models.Cadete>
+
+@{
+    ViewData["Title"] = "Lista de Cadetes";
+}
+
+<h1> @ViewData["Title"] </h1>
+
+<p>
+    <a asp-action="AltaCadete">Nuevo Cadete</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Cód.
+            </th>
+            <th>
+                Nombre
+            </th>
+            <th>
+                Teléfono
+            </th>
+            <th>
+                Dirección
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var cad in Model) {
+        <tr>
+            <td>
+                @cad.Id
+            </td>
+            <td>
+                @cad.Nombre
+            </td>
+            <td>
+                @cad.Telefono
+            </td>
+            <td>
+                @cad.Direccion
+            </td>
+            <td>
+                <a asp-action="PedidosCadete" asp-route-id="@cad.Id">Pedidos</a> |
+                <a asp-action="EditarCadete" asp-route-id="@cad.Id">Editar</a> |
+                <a asp-action="ConfirmacionBorrar" asp-route-id="@cad.Id">Borrar</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,0 +1,43 @@
+@model cadAp2.Models.Pedido
+
+@{
+    ViewData["Title"] = "Crear Pedio";
+}
+
+<h1> @ViewData["Title"] </h1>
+
+<article class="contenedor-form-cadete">
+    <form asp-controller="Pedido" asp-action="GuardarPedido" method="post">
+        <fieldset class="form-group row">
+
+            <legend>Pedido nro. @ViewData["idPed"] </legend>
+            <div class="form-group">
+                <label for="nom">Nombre del Cliente: </label>
+                    <input class="form-control" type="text" name="Nombre" id="nom" maxlength="50" placeholder="Ingrese el nombre..." required>
+            </div>
+            <div class="form-group">
+            <label for="dire">Dirección: </label>
+                <input class="form-control" type="text" name="Direccion" id="dire" maxlength="50" placeholder="Ingrese la dirección..." required>
+            </div>
+            <div class="form-group">
+            <label for="detalle">Detalles de la dirección: </label>
+                <input class="form-control" type="text" name="Referencia" id="detalle" maxlength="50" placeholder="Opcional, detalles de la vivienda..." >
+            </div>
+            <div class="form-group">
+            <label for="tel">Teléfono: </label>
+                <input class="form-control" type="text" name="Telefono" id="tel" maxlength="50" placeholder="Ingrese el teléfono..." required>
+            </div>
+            <div class="form-group">
+            <label for="obs">Observaciones del Pedido: </label>
+                <input class="form-control" type="text" name="Detalles" id="obs" maxlength="50" placeholder="Opcional, detalle adicional del pedido..." >
+            </div>
+            <div class="form-group">
+            <input type="submit" value="Guardar" class="btn btn-info" />
+            </div>
+        </fieldset>
+    </form>
+</article>
+
+<div>
+    <a asp-action="Index">Volver a la lista</a>
+</div>

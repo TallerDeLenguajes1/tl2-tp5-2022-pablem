@@ -1,0 +1,53 @@
+@model IEnumerable<cadAp2.Models.Pedido>
+
+@{
+    ViewData["Title"] = "Lista de Pedidos";
+}
+
+<h1> @ViewData["Title"] </h1>
+
+<p>
+    <a asp-action="AltaPedido">Nuevo Pedido</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @* Cód. MODIFICAR!!! ABAJO *@
+            </th>
+            <th>
+                Cliente
+            </th>
+            <th>
+                Estado
+            </th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var ped in Model) {
+        <tr>
+            <td>
+                @ped.Id
+            </td>
+            <td>
+                @ped.Cliente.Nombre
+            </td>
+            <td>
+                @ped.Estado
+            </td>
+            <td>
+                <a asp-action="AsignarCadete" asp-route-id="@ped.Id">Asignar</a>
+            </td>
+            <td>
+                <a asp-action="CambiarCadete" asp-route-id="@ped.Id">Cambiar</a>
+            </td>
+            <td>
+                <a asp-action="AnularPedido" asp-route-id="@ped.Id">Anular</a> 
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

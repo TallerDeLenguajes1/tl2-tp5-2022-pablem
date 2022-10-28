@@ -1,0 +1,10 @@
+@model cadAp2.Models.Cadete
+
+<h2> Borrar Cadete @Model.Id</h2>
+
+<p>¿Está seguro que quiere eliminar a <strong>@Model.Nombre</strong>?</p>
+<form asp-action="BorrarCadete" class="form-row align-items-center">
+    <input type="hidden" asp-for="Id" />
+    <input type="submit" value="Confirmar" class="btn btn-danger" />  
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
