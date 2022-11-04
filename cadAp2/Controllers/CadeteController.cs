@@ -2,7 +2,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using cadAp2.Models;
-using cadAp2.ViewModels;
+using ViewModels;
 
 namespace cadAp2.Controllers
 {
