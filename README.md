@@ -4,3 +4,7 @@
 + Manejo Vistas
 + Validaciones
 + View Models
+
+
+ctrl+shift+p buget add package: System.Data.SQLite
+https://www.nuget.org/packages/System.Data.SQLite/

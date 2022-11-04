@@ -8,5 +8,6 @@ public class PerfilDeMapeo : Profile
     {
         CreateMap<AltaCadeteViewModel, Cadete>();
         // CreateMap<Cadete, AltaCadeteViewModel>().ReverseMap();
+        CreateMap<Cadete,BorrarCadeteViewModel>();
     }
 }

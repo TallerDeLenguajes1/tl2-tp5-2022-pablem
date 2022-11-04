@@ -7,17 +7,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
  
 // Auto Mapper Configurations 
-// builder.Services.AddAutoMapper(new PerfilDeMapeo()); //--->CONSULTA
 var mapperConfig = new MapperConfiguration(cfg =>
 {
     cfg.AddProfile(new PerfilDeMapeo());
 });
-IMapper mapper = new Mapper(mapperConfig);
-// IMapper mapper = mapperConfig.CreateMapper();
-// builder.Services.AddAutoMapper(mapper); //--->CONSULTA
-// builder.Services.AddSingleton(mapper);
-// builder.Services.AddMvc();
-// CONSULTA
+IMapper mapper = mapperConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
+builder.Services.AddMvc();
 
 var app = builder.Build();
 

@@ -4,20 +4,24 @@ using Microsoft.Extensions.Logging;
 using cadAp2.Models;
 using ViewModels;
 
+
 namespace cadAp2.Controllers
 {
     public class CadeteController : Controller
     {
         static int numeroCadetes = 0;
-        static List<Cadete> listaCadetes = new List<Cadete>();
+        // static List<Cadete> listaCadetes = new List<Cadete>(); ////NO VA MAS
         private readonly IMapper _mapper;
         private readonly ILogger<CadeteController> _logger;
 
         public CadeteController(ILogger<CadeteController> logger, IMapper mapper)
         {
+            
             _logger = logger;
             _mapper = mapper;
         }
+
+        
 
         /***** //spoiler alert: implementar con base de datos
         public async Task<IActionResult> Index()
@@ -30,7 +34,7 @@ namespace cadAp2.Controllers
 
         public IActionResult Index()
         {
-            return View(listaCadetes);
+            return View(listaCadetes); ///----> CONSULTA 
         }
 
         public IActionResult AltaCadete()
@@ -62,11 +66,13 @@ namespace cadAp2.Controllers
         {
             ///////control if(listaCadetes.any)
             var cadete = listaCadetes.Single(x => x.Id == id); //.SingleOrDefault(); 
+            BorrarCadeteViewModel borrar = _mapper.Map<BorrarCadeteViewModel>(cadete);
             return View(cadete);
         }
 
         // [HttpGet]
-        public IActionResult BorrarCadete(int id) {
+        public IActionResult BorrarCadete(int id) 
+        {
             listaCadetes.Remove(listaCadetes.Single(x => x.Id == id));
             return RedirectToAction("Index",listaCadetes);
         }

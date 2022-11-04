@@ -28,7 +28,7 @@ namespace cadAp2.Models
         public string? Nombre { get; set; }
         public string? Direccion { get; set; }
         public string? Telefono { get; set; }
-        public List<Pedido> ListaPedidos { get; set; }
+        public List<Pedido>? ListaPedidos { get; set; }
 
         //Métodos
 
