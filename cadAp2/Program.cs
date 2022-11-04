@@ -4,6 +4,18 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+
+// Auto Mapper Configurations ---->CONSULTA
+var mapperConfig = new MapperConfiguration(mc =>
+{
+    mc.AddProfile(new MappingProfile());
+});
+IMapper mapper = mapperConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
+builder.Services.AddMvc();
+// CONSULTA
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
