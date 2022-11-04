@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using cadAp2.Models;
+using cadAp2.ViewModels;
 
 namespace cadAp2.Controllers
 {
@@ -13,12 +10,13 @@ namespace cadAp2.Controllers
     {
         static int numeroCadetes = 0;
         static List<Cadete> listaCadetes = new List<Cadete>();
-
+        private readonly IMapper _mapper;
         private readonly ILogger<CadeteController> _logger;
 
-        public CadeteController(ILogger<CadeteController> logger)
+        public CadeteController(ILogger<CadeteController> logger, IMapper mapper)
         {
             _logger = logger;
+            _mapper = mapper;
         }
 
         /***** //spoiler alert: implementar con base de datos
@@ -48,7 +46,13 @@ namespace cadAp2.Controllers
         // }
 
         [HttpPost]
-        public IActionResult GuardarCadete(Cadete cadete) {
+        public IActionResult GuardarCadete(AltaCadeteViewModel cadeteViewModel) 
+        {
+
+            //if(ModelState.IsValid)//---------------------> ? CONSULTA
+
+            Cadete cadete = _mapper.Map<Cadete>(cadeteViewModel);
+            
             cadete.Id = ++numeroCadetes;
             listaCadetes.Add(cadete);
             return RedirectToAction("Index",listaCadetes);
