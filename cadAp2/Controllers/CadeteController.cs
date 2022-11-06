@@ -21,8 +21,6 @@ namespace cadAp2.Controllers
             _mapper = mapper;
         }
 
-        
-
         /***** //spoiler alert: implementar con base de datos
         public async Task<IActionResult> Index()
         {
@@ -44,22 +42,39 @@ namespace cadAp2.Controllers
             return View();
         }
 
-        // [HttpGet]
-        // public IActionResult ActualizarCadete(int id)
-        // {
-        //     return View(listaCadetes.Select(x => x.Id == id).Single());
-        // }
-
         [HttpPost]
         public IActionResult GuardarCadete(AltaCadeteViewModel cadeteViewModel) 
         {
-
             //if(ModelState.IsValid)//---------------------> ? CONSULTA
-
             Cadete cadete = _mapper.Map<Cadete>(cadeteViewModel);
-            
             cadete.Id = ++numeroCadetes;
             listaCadetes.Add(cadete);
+            return RedirectToAction("Index",listaCadetes);
+        }
+
+        // GET: Cadete/Editar/5
+        public IActionResult Editar(int? id)
+        {
+            if (id == null) 
+                return NotFound();
+
+            var cadete = listaCadetes.Single(x => x.Id == id);
+            if (cadete == null)
+                return NotFound();
+
+            ModificarCadeteViewModel editarView = _mapper.Map<ModificarCadeteViewModel>(cadete);
+            return View(editarView);
+        }
+
+        // POST: Cadete/Editar/5
+        [HttpPost]
+        public IActionResult Editar(ModificarCadeteViewModel cadeteViewModel)
+        {
+            Cadete actual = _mapper.Map<Cadete>(cadeteViewModel);
+            Cadete anterior = listaCadetes.Single(x => x.Id == actual.Id);
+            anterior.Nombre = actual.Nombre;
+            anterior.Direccion = actual.Direccion;
+            anterior.Telefono = actual.Telefono;//sorry not sorry --> TP6: UPDATE
             return RedirectToAction("Index",listaCadetes);
         }
 
