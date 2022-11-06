@@ -10,7 +10,7 @@ namespace cadAp2.Controllers
     public class CadeteController : Controller
     {
         static int numeroCadetes = 0;
-        // static List<Cadete> listaCadetes = new List<Cadete>(); ////NO VA MAS
+        static List<Cadete> listaCadetes = new List<Cadete>(); ////NO VA MAS (en el tp6)
         private readonly IMapper _mapper;
         private readonly ILogger<CadeteController> _logger;
 
@@ -34,7 +34,8 @@ namespace cadAp2.Controllers
 
         public IActionResult Index()
         {
-            return View(listaCadetes); ///----> CONSULTA 
+            List<MostrarCadeteViewModel> listaView = _mapper.Map<List<MostrarCadeteViewModel>>(listaCadetes);
+            return View(listaView); 
         }
 
         public IActionResult AltaCadete()
@@ -66,8 +67,8 @@ namespace cadAp2.Controllers
         {
             ///////control if(listaCadetes.any)
             var cadete = listaCadetes.Single(x => x.Id == id); //.SingleOrDefault(); 
-            BorrarCadeteViewModel borrar = _mapper.Map<BorrarCadeteViewModel>(cadete);
-            return View(cadete);
+            BorrarCadeteViewModel borrarView = _mapper.Map<BorrarCadeteViewModel>(cadete);
+            return View(borrarView);
         }
 
         // [HttpGet]
