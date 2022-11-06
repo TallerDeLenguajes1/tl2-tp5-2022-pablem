@@ -16,7 +16,6 @@ namespace cadAp2.Controllers
 
         public CadeteController(ILogger<CadeteController> logger, IMapper mapper)
         {
-            
             _logger = logger;
             _mapper = mapper;
         }
