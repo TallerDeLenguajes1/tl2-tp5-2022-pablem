@@ -1,0 +1,47 @@
+@model IEnumerable<ViewModels.AsignarPedidoViewModel>
+
+@{
+    ViewData["Title"] = "Asignar Pedido";
+    var idCadete = @ViewData["idCad"].ToString();
+}
+
+<h1> @ViewData["Title"] </h1>
+
+<h4>Cadete nro. @idCadete</h4>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DetalleCorto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Direccion)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var ped in Model) {
+        <tr>
+            <td>
+                @ped.Id
+            </td>
+            <td>
+                @ped.DetalleCorto
+            </td>
+            <td>
+                @ped.Direccion
+            </td>
+            <td>
+                <a asp-action="GuardarPedido" asp-route-idCad="@idCadete" asp-route-idPed="@ped.Id" > Asignar </a>
+            </td> 
+        </tr>
+}
+    </tbody>
+</table>
+
+<p> <a asp-action="Index">Volver a la lista</a> </p>

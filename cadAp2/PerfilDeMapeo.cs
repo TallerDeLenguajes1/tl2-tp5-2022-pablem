@@ -16,5 +16,8 @@ public class PerfilDeMapeo : Profile
         CreateMap<MostrarPedidoViewModel, Pedido>().ReverseMap();
         CreateMap<ModificarPedidoViewModel, Pedido>().ReverseMap();
 
+        CreateMap<AsignarPedidoViewModel, Pedido>().ReverseMap();
+            // .ForMember(dest => dest.DetalleCorto, opt => opt.MapFrom(src => src.DetalleCorto()));
+
     }
 }

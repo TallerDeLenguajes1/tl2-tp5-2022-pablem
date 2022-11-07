@@ -16,7 +16,7 @@
                 @Html.DisplayNameFor(model => model.Id)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Detalles)
+                @Html.DisplayNameFor(model => model.DetalleCorto)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.NombreCliente)
@@ -38,7 +38,7 @@
                 @ped.Id
             </td>
             <td>
-                @ped.DetalleCorto()
+                @ped.DetalleCorto
             </td>
             <td>
                 @ped.NombreCliente
@@ -51,7 +51,7 @@
             </td>
             <td>
                 <a asp-action="Editar" asp-route-id="@ped.Id"> Editar </a> |
-                <a asp-action="DatosCliente" asp-route-id="@ped.Id"> Datos </a> |
+                <a asp-action="DatosCliente" asp-route-id="@ped.Id"> Detalles </a> |
                 <a asp-action="ConfirmacionBorrar" asp-route-id="@ped.Id"> Borrar </a>
             </td>
             <td>

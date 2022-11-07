@@ -88,9 +88,45 @@ namespace cadAp2.Controllers
         // [HttpGet]
         public IActionResult BorrarCadete(int id) 
         {
-            listaCadetes.Remove(listaCadetes.Single(x => x.Id == id));
+            var cadete = listaCadetes.Single(x => x.Id == id);
+            if(cadete.ListaPedidos != null && cadete.ListaPedidos.Any()) {
+                foreach (var pedido in cadete.ListaPedidos) { 
+                    if(pedido.Estado == EstadoPedido.Viajando)
+                        pedido.Estado = EstadoPedido.Pendiente;   
+                }
+            }
+            listaCadetes.Remove(cadete);
             return RedirectToAction("Index",listaCadetes);
         }
+
+        public IActionResult PedidosCadete(int id) ///Para después
+        {
+            var cadete = listaCadetes.Single(x => x.Id == id);
+            return View(cadete);
+        }
+
+        // GET: Cadete/AsignarPedido/5
+        public IActionResult AsignarPedido(int id)
+        {
+            ViewData["idCad"] = id;
+            var listaPendientes = PedidoController.listaPedidos.Where(ped => ped.Estado == EstadoPedido.Pendiente);
+            List<AsignarPedidoViewModel> asignarView = _mapper.Map<List<AsignarPedidoViewModel>>(listaPendientes);
+            return View(asignarView);
+        }
+
+        // GET: Cadete/GuardarPedido/5&3
+        public IActionResult GuardarPedido(int idCad, int idPed)
+        {
+            var cadete = listaCadetes.Single(x => x.Id == idCad);
+            var pedido = PedidoController.listaPedidos.Single(x => x.Id == idPed);
+            pedido.Estado = EstadoPedido.Viajando;
+            if (!cadete.ListaPedidos.Contains(pedido))
+            {
+                cadete.agregarPedido(pedido);
+            }
+            return RedirectToAction("Index",listaCadetes);
+        }
+           
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

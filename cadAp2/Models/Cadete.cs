@@ -9,6 +9,9 @@ namespace cadAp2.Models
         // List<Pedido> listaPedidos;
 
         //Constructor
+        public Cadete() {
+            ListaPedidos = new List<Pedido>();
+        }
         // public Cadete(string nombre, string direccion, string telefono)
         // {
         //     this.id = 0;
@@ -35,6 +38,11 @@ namespace cadAp2.Models
         public void agregarPedido(Pedido pedido) 
         {
             ListaPedidos.Add(pedido);
+        }
+
+        public int NroPendientes()
+        {
+            return ListaPedidos.Where(ped => ped.Estado == EstadoPedido.Viajando).Count();
         }
 
         public int calcularPago() 

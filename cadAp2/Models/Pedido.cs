@@ -24,9 +24,16 @@ namespace cadAp2.Models
         public EstadoPedido Estado { get => estado; set => estado = value; }
         public Cliente Cliente { get => cliente; set => cliente = value; }
 
+        public string DetalleCorto()
+        {
+            return (Detalles.Length < 16) ? Detalles : Detalles.Remove(12)+"...";
+        }
+
         public string mostrar()
         {
             return $"+ Pedido: {id} - Cliente: {cliente.Nombre} - Estado: {estado}";
         }
+
+
     }
 }

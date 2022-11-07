@@ -9,7 +9,7 @@ namespace cadAp2.Controllers
     public class PedidoController : Controller
     {
         static int numeroPedidos;
-        static List<Pedido> listaPedidos = new List<Pedido>();
+        public static List<Pedido> listaPedidos = new List<Pedido>();
         private readonly IMapper _mapper;
         private readonly ILogger<PedidoController> _logger;
 
