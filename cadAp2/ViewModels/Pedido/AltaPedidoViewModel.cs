@@ -10,10 +10,10 @@ namespace ViewModels
         [Required][StringLength(50)][Display(Name="Nombre del cliente")]
         public string? Nombre { get; set; }
 
-        [Required][StringLength(100)][Display(Name="Detalles adicionales")]
+        [Required][StringLength(100)][Display(Name="Dirección de destino")]
         public string? Direccion  { get; set; }
 //text area??
-        [StringLength(100)][Display(Name="Dirección de destino")]
+        [StringLength(100)][Display(Name="Detalles adicionales")]
         public string? ReferenciaDireccion  { get; set; }
         
         [Required][Phone][StringLength(60, MinimumLength = 10)]

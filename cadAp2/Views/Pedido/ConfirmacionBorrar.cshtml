@@ -1,0 +1,11 @@
+@model ViewModels.BorrarPedidoViewModel
+
+<h2> Borrar Pedido @Model.Id</h2>
+
+<p>¿Está seguro que quiere eliminar este pedido?</p>
+<p><strong>@Model.Detalle</strong></p>
+<form asp-action="Borrar" class="form-row align-items-center">
+    <input type="hidden" asp-for="Id" />
+    <input type="submit" value="Confirmar" class="btn btn-danger" />  
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>

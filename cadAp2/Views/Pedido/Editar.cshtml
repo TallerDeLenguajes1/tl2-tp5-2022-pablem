@@ -1,17 +1,32 @@
-@model ViewModels.ModificarCadeteViewModel
+@model ViewModels.ModificarPedidoViewModel
 
 @{
-    ViewData["Title"] = "Editar Cadete";
+    ViewData["Title"] = "Editar Pedido";
 }
 
-<h1>Modificar datos de Cadete</h1>
-<h4>Cadete nro. @Model.Id</h4>
+<h1>Modificar el pedido</h1>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Editar">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
+            <fieldset class="form-group row">
+            <legend> Pedido nro. @ViewData["idPed"] </legend>
+            <div class="form-group">
+                <label asp-for="Detalles" class="control-label"></label>
+                <input asp-for="Detalles" class="form-control" />
+                <span asp-validation-for="Detalles" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Estado"></label>
+                <select asp-for="Estado" asp-items="Html.GetEnumSelectList<cadAp2.Models.EstadoPedido>()">
+                    <option value=""> </option>
+                </select>
+            </div>
+        </fieldset>
+        <fieldset class="form-group row">
+            <legend> Detalles del Cliente </legend>
             <div class="form-group">
                 <label asp-for="Nombre" class="control-label"></label>
                 <input asp-for="Nombre" class="form-control" />
@@ -23,6 +38,11 @@
                 <span asp-validation-for="Direccion" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="ReferenciaDireccion" class="control-label"></label>
+                <input asp-for="ReferenciaDireccion" class="form-control" />
+                @* <span asp-validation-for="ReferenciaDireccion" class="text-danger"></span> *@
+            </div>
+            <div class="form-group">
                 <label asp-for="Telefono" class="control-label"></label>
                 <input asp-for="Telefono" class="form-control" />
                 <span asp-validation-for="Telefono" class="text-danger"></span>
@@ -30,6 +50,7 @@
             <div class="form-group">
                 <input type="submit" value="Guardar" class="btn btn-primary" />
             </div>
+        </fieldset>
         </form>
     </div>
 </div>
