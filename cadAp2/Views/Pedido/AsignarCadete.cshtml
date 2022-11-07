@@ -12,6 +12,13 @@
 <form asp-controller="CadeteController" asp-action="GuardarPedido" method="get" class="form-row align-items-center">
     <input type="hidden" name="idPed" value="@idPedido" />
     @* <select name="idCad" asp-items="Model.ToList()"> *@
+    <select name="idCad" id="">
+    @{
+        foreach (var cad in Model)
+        {
+            <option value="@cad.Id">@cad.Nombre</option>
+        }
+    }
 
     </select>
     <input type="submit" value="Confirmar" class="btn btn-danger" />  
