@@ -1,0 +1,51 @@
+@model ViewModels.AltaPedidoViewModel
+
+@{
+    ViewData["Title"] = "Crear Pedio";
+}
+
+<h1> @ViewData["Title"] </h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Guardar">
+        <fieldset class="form-group row">
+            <legend> Pedido nro. @ViewData["idPed"] </legend>
+            <div class="form-group">
+                <label asp-for="Detalles" class="control-label"></label>
+                <input asp-for="Detalles" class="form-control" />
+                <span asp-validation-for="Detalles" class="text-danger"></span>
+            </div>
+        </fieldset>
+        <fieldset class="form-group row">
+            <legend> Detalles del Cliente </legend>
+            <div class="form-group">
+                <label asp-for="Nombre" class="control-label"></label>
+                <input asp-for="Nombre" class="form-control" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Direccion" class="control-label"></label>
+                <input asp-for="Direccion" class="form-control" />
+                <span asp-validation-for="Direccion" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ReferenciaDireccion" class="control-label"></label>
+                <input asp-for="ReferenciaDireccion" class="form-control" />
+                @* <span asp-validation-for="ReferenciaDireccion" class="text-danger"></span> *@
+            </div>
+            <div class="form-group">
+                <label asp-for="Telefono" class="control-label"></label>
+                <input asp-for="Telefono" class="form-control" />
+                <span asp-validation-for="Telefono" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Crear" class="btn btn-primary" />
+            </div>
+        </fieldset>
+    </form>
+</article>
+
+<div>
+    <a asp-action="Index">Volver a la lista</a>
+</div>

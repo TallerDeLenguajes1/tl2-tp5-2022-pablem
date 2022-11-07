@@ -6,10 +6,11 @@ namespace ViewModels
     {
         public int Id { get; set; }
         public string? Detalles { get; set; }
+        [Display(Name="Nombre del cliente")]
         public string? NombreCliente { get; set; }
         public string? Direccion { get; set; }
         public cadAp2.Models.EstadoPedido Estado { get; set; }
-
+        
         public string DetalleCorto()
         {
             return (Detalles.Length < 11) ? Detalles : Detalles.Remove(7)+"...";

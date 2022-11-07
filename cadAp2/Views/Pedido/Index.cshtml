@@ -1,27 +1,32 @@
-@model IEnumerable<cadAp2.Models.Pedido>
+@model IEnumerable<ViewModels.MostrarPedidoViewModel>
 
 @{
-    ViewData["Title"] = "Lista de Pedidos";
+    ViewData["Title"] = "Todos los Pedidos";
 }
 
 <h1> @ViewData["Title"] </h1>
 
 <p>
-    <a asp-action="AltaPedido">Nuevo Pedido</a>
+    <a asp-action="Alta">Nuevo Pedido</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @* Cód. MODIFICAR!!! ABAJO *@
+                @Html.DisplayNameFor(model => model.Id)
             </th>
             <th>
-                Cliente
+                @Html.DisplayNameFor(model => model.Detalles)
             </th>
             <th>
-                Estado
+                @Html.DisplayNameFor(model => model.NombreCliente)
             </th>
-            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.Direccion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Estado)
+            </th>
             <th></th>
             <th></th>
         </tr>
@@ -33,19 +38,24 @@
                 @ped.Id
             </td>
             <td>
-                @ped.Cliente.Nombre
+                @ped.DetalleCorto()
+            </td>
+            <td>
+                @ped.NombreCliente
+            </td>
+              <td>
+                @ped.Direccion
             </td>
             <td>
                 @ped.Estado
             </td>
             <td>
-                <a asp-action="AsignarCadete" asp-route-id="@ped.Id">Asignar</a>
+                <a asp-action="Editar" asp-route-id="@ped.Id"> Editar </a> |
+                <a asp-action="DatosCliente" asp-route-id="@ped.Id"> Datos </a> |
+                <a asp-action="ConfirmacionBorrar" asp-route-id="@ped.Id"> Borrar </a>
             </td>
             <td>
-                <a asp-action="CambiarCadete" asp-route-id="@ped.Id">Cambiar</a>
-            </td>
-            <td>
-                <a asp-action="AnularPedido" asp-route-id="@ped.Id">Anular</a> 
+                <a asp-action="Asignar" asp-route-id="@ped.Id"> Asignar Cadete </a>
             </td>
         </tr>
 }

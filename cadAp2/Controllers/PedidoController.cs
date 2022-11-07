@@ -65,6 +65,7 @@ namespace cadAp2.Controllers
             return RedirectToAction("Index",listaPedidos);
         }
 
+        // GET: Pedido/ConfirmacionBorrar/5
         public IActionResult ConfirmacionBorrar(int id) 
         {
             var pedido = listaPedidos.Single(x => x.Id == id); //.SingleOrDefault(); 
