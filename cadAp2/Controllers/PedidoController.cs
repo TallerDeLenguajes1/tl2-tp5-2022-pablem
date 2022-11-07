@@ -80,6 +80,14 @@ namespace cadAp2.Controllers
             return RedirectToAction("Index",listaPedidos);
         }
 
+        // GET: Cadete/AsignarCadete/5
+        public IActionResult AsignarCadete(int id)
+        {
+            ViewData["idPed"] = id;
+            List<AsignarCadeteViewModel> asignarView = _mapper.Map<List<AsignarCadeteViewModel>>(CadeteController.listaCadetes);
+            return View(asignarView);
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

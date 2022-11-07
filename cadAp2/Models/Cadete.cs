@@ -37,7 +37,7 @@ namespace cadAp2.Models
 
         public void agregarPedido(Pedido pedido) 
         {
-            ListaPedidos.Add(pedido);
+            ListaPedidos?.Add(pedido);
         }
 
         public int NroPendientes()

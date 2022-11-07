@@ -10,7 +10,7 @@ namespace cadAp2.Controllers
     public class CadeteController : Controller
     {
         static int numeroCadetes = 0;
-        static List<Cadete> listaCadetes = new List<Cadete>(); ////NO VA MAS (en el tp6)
+        public static List<Cadete> listaCadetes = new List<Cadete>(); ////NO VA MAS (en el tp6)
         private readonly IMapper _mapper;
         private readonly ILogger<CadeteController> _logger;
 
@@ -114,7 +114,7 @@ namespace cadAp2.Controllers
             return View(asignarView);
         }
 
-        // GET: Cadete/GuardarPedido/5&3
+        // GET: Cadete/GuardarPedido?idCad=1&idPed=5
         public IActionResult GuardarPedido(int idCad, int idPed)
         {
             var cadete = listaCadetes.Single(x => x.Id == idCad);
@@ -126,7 +126,6 @@ namespace cadAp2.Controllers
             }
             return RedirectToAction("Index",listaCadetes);
         }
-           
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

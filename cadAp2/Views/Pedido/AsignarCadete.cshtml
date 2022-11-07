@@ -1,0 +1,23 @@
+@model IEnumerable<ViewModels.AsignarCadeteViewModel>
+
+@{
+    ViewData["Title"] = "Editar Pedido";
+    string? idPedido = ViewData["idPed"]?.ToString();
+}
+
+<h1> Asignar o Cambiar de Cadete </h1>
+<hr />
+<h4> Pedido nro. @idPedido</h4>
+
+<form asp-controller="CadeteController" asp-action="GuardarPedido" method="get" class="form-row align-items-center">
+    <input type="hidden" name="idPed" value="@idPedido" />
+    @* <select name="idCad" asp-items="Model.ToList()"> *@
+
+    </select>
+    <input type="submit" value="Confirmar" class="btn btn-danger" />  
+    <a asp-action="Index" class="btn btn-secondary"> Cancelar </a>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
