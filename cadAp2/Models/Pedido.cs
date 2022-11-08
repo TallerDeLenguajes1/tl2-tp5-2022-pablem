@@ -9,6 +9,7 @@ namespace cadAp2.Models
 
         //Constructor
         public Pedido() {
+            this.cliente = new Cliente();
             this.estado = EstadoPedido.Pendiente;
         }
         public Pedido(string nomb, string dire, string tel, string refe, string detalles)

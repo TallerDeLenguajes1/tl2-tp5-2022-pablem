@@ -1,4 +1,4 @@
-@model IEnumerable<ViewModels.AsignarCadeteViewModel>
+@model ViewModels.AsignarCadeteViewModel
 
 @{
     ViewData["Title"] = "Editar Pedido";
@@ -9,19 +9,12 @@
 <hr />
 <h4> Pedido nro. @idPedido</h4>
 
-<form asp-controller="CadeteController" asp-action="GuardarPedido" method="get" class="form-row align-items-center">
-    <input type="hidden" name="idPed" value="@idPedido" />
-    @* <select name="idCad" asp-items="Model.ToList()"> *@
-    <select name="idCad" id="">
-    @{
-        foreach (var cad in Model)
-        {
-            <option value="@cad.Id">@cad.Nombre</option>
-        }
-    }
-
+<form asp-controller="Cadete" asp-action="GuardarPedido" method="get" class="form-row align-items-center">
+    <select name="idCad" asp-items="Model.Lista">
+        <option value="">  </option>
     </select>
-    <input type="submit" value="Confirmar" class="btn btn-danger" />  
+    <input type="hidden" name="idPed" value="@idPedido" />
+    <input type="submit" value="Confirmar" class="btn btn-primary" />  
     <a asp-action="Index" class="btn btn-secondary"> Cancelar </a>
 </form>
 

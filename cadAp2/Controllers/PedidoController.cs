@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using cadAp2.Models;
 using ViewModels;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace cadAp2.Controllers
 {
@@ -22,6 +23,20 @@ namespace cadAp2.Controllers
         public IActionResult Index()
         {
             List<MostrarPedidoViewModel> listaView = _mapper.Map<List<MostrarPedidoViewModel>>(listaPedidos);
+
+            //Cambiar en el tp6 
+            foreach (var view in listaView)
+            {
+                foreach (var cad in CadeteController.listaCadetes)
+                {
+                    if(cad.ListaPedidos != null && cad.ListaPedidos.Any())
+                        foreach (var pedido in cad.ListaPedidos)
+                        {
+                            if (view.Id == pedido.Id)
+                                view.NombreCadete = cad.Nombre;
+                        }
+                } 
+            }
             return View(listaView);
         }
 
@@ -43,6 +58,8 @@ namespace cadAp2.Controllers
         // GET: Pedido/Editar/5
         public IActionResult Editar(int? id)
         {
+            ViewData["idPed"] = id;
+            
             if (id == null) 
                 return NotFound();
 
@@ -84,7 +101,9 @@ namespace cadAp2.Controllers
         public IActionResult AsignarCadete(int id)
         {
             ViewData["idPed"] = id;
-            List<AsignarCadeteViewModel> asignarView = _mapper.Map<List<AsignarCadeteViewModel>>(CadeteController.listaCadetes);
+            // List<AsignarCadeteViewModel> asignarView = _mapper.Map<List<AsignarCadeteViewModel>>(CadeteController.listaCadetes);
+            var asignarView = new AsignarCadeteViewModel();
+            asignarView.Lista = new SelectList(CadeteController.listaCadetes, "Id", "Nombre");
             return View(asignarView);
         }
 

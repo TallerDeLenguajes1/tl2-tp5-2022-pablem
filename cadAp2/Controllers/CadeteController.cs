@@ -99,11 +99,11 @@ namespace cadAp2.Controllers
             return RedirectToAction("Index",listaCadetes);
         }
 
-        public IActionResult PedidosCadete(int id) ///Para después
-        {
-            var cadete = listaCadetes.Single(x => x.Id == id);
-            return View(cadete);
-        }
+        // public IActionResult PedidosCadete(int id) ///Para después
+        // {
+        //     var cadete = listaCadetes.Single(x => x.Id == id);
+        //     return View(cadete);
+        // }
 
         // GET: Cadete/AsignarPedido/5
         public IActionResult AsignarPedido(int id)
@@ -119,11 +119,16 @@ namespace cadAp2.Controllers
         {
             var cadete = listaCadetes.Single(x => x.Id == idCad);
             var pedido = PedidoController.listaPedidos.Single(x => x.Id == idPed);
-            pedido.Estado = EstadoPedido.Viajando;
-            if (!cadete.ListaPedidos.Contains(pedido))
+            foreach (var cad in listaCadetes)
             {
-                cadete.agregarPedido(pedido);
+                if (cad.ListaPedidos != null && cad.ListaPedidos.Contains(pedido))
+                {
+                    cad.ListaPedidos.Remove(pedido);
+                    break;
+                }
             }
+            pedido.Estado = EstadoPedido.Viajando;
+            cadete.ListaPedidos.Add(pedido);
             return RedirectToAction("Index",listaCadetes);
         }
 
