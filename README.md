@@ -5,6 +5,9 @@
 + Validaciones
 + View Models
 
+# Trabajo Páctico Nº 6
++ Creación DB
++ Manejo SQL
 
 ctrl+shift+p nuget add package: System.Data.SQLite
 https://www.nuget.org/packages/System.Data.SQLite/
