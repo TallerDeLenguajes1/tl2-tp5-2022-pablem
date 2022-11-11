@@ -10,7 +10,7 @@ namespace Repositorios
         {
             Cadete nuevo;
             var listaCadetes = new List<Cadete>();
-            var cadenaDeConexion = @"Data Source=db\cadeteria22.sql;Version=3;";
+            var cadenaDeConexion = @"Data Source=db\cadeteria.db;Version=3;";
             var connection = new SQLiteConnection(cadenaDeConexion);
             connection.Open();
             var queryString = "SELECT * FROM cadete;";
