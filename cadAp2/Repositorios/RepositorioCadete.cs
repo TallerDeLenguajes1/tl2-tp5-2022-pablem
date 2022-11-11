@@ -10,10 +10,10 @@ namespace Repositorios
         {
             Cadete nuevo;
             var listaCadetes = new List<Cadete>();
-            var cadenaDeConexion = @"Data Source=db\Cadeteria.db;Version=3;";
+            var cadenaDeConexion = @"Data Source=db\cadeteria22.sql;Version=3;";
             var connection = new SQLiteConnection(cadenaDeConexion);
             connection.Open();
-            var queryString = "SELECT * FROM Cadete;";
+            var queryString = "SELECT * FROM cadete;";
             var comando = new SQLiteCommand(queryString, connection);
             
             using(var reader = comando.ExecuteReader()) 
@@ -21,14 +21,13 @@ namespace Repositorios
                 while(reader.Read())
                 {
                     nuevo = new Cadete();
-                    nuevo.Id = Convert.ToInt32(reader["Id"]);
-                    nuevo.Nombre = reader["Nombre"].ToString();
-                    nuevo.Telefono = reader["Telefono"].ToString();
-                    nuevo.Direccion = reader["Direccion"].ToString();
+                    nuevo.Id = Convert.ToInt32(reader["id_cadete"]);
+                    nuevo.Nombre = reader["cadete"].ToString();
+                    nuevo.Telefono = reader["telefono"].ToString();
+                    nuevo.Direccion = reader["direccion"].ToString();
                     listaCadetes.Add(nuevo);
                 }
             }
-
             connection.Close();
             return listaCadetes;
         }

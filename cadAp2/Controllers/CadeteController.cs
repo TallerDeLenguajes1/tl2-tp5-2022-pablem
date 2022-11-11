@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using cadAp2.Models;
 using ViewModels;
+using Repositorios;
 
 
 namespace cadAp2.Controllers
@@ -31,7 +32,7 @@ namespace cadAp2.Controllers
 
         public IActionResult Index()
         {
-            List<MostrarCadeteViewModel> listaView = _mapper.Map<List<MostrarCadeteViewModel>>(listaCadetes);
+            List<MostrarCadeteViewModel> listaView = _mapper.Map<List<MostrarCadeteViewModel>>(RepositorioCadete.GetCadetes());
             return View(listaView); 
         }
 
