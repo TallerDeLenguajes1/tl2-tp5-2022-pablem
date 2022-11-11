@@ -14,25 +14,23 @@ namespace cadAp2.Controllers
         public static List<Cadete> listaCadetes = new List<Cadete>(); ////NO VA MAS (en el tp6)
         private readonly IMapper _mapper;
         private readonly ILogger<CadeteController> _logger;
+        // private readonly IRepositorioCadete cadeteRepo;
+        //private readonly IConfiguration config;
 
-        public CadeteController(ILogger<CadeteController> logger, IMapper mapper)
+        // public CadeteController(ILogger<CadeteController> logger, IMapper mapper, IRepositorioCadete cadeteRepo)
+        public CadeteController(ILogger<CadeteController> logger, IMapper mapper)//, IConfiguration config)
         {
             _logger = logger;
             _mapper = mapper;
+            // this.cadeteRepo = cadeteRepo;
+            // this.config = config;
         }
-
-        /***** //spoiler alert: implementar con base de datos
-        public async Task<IActionResult> Index()
-        {
-            return _context.Movie != null ? 
-                View(await _context.Movie.ToListAsync()) :
-                Problem("Entity set 'MvcMovieContext.Movie'  is null.");
-        }
-        *******/
 
         public IActionResult Index()
         {
-            List<MostrarCadeteViewModel> listaView = _mapper.Map<List<MostrarCadeteViewModel>>(RepositorioCadete.GetCadetes());
+            var cadeteRepo = new RepositorioCadeteSQLite();
+            var listaCadete = cadeteRepo.GetAll();
+            List<MostrarCadeteViewModel> listaView = _mapper.Map<List<MostrarCadeteViewModel>>(listaCadete);
             return View(listaView); 
         }
 
@@ -46,9 +44,10 @@ namespace cadAp2.Controllers
         public IActionResult GuardarCadete(AltaCadeteViewModel cadeteViewModel) 
         {
             //if(ModelState.IsValid)//---------------------> ? CONSULTA
+            var cadeteRepo = new RepositorioCadeteSQLite();
             Cadete cadete = _mapper.Map<Cadete>(cadeteViewModel);
-            cadete.Id = ++numeroCadetes;
-            listaCadetes.Add(cadete);
+            ++numeroCadetes;
+            cadeteRepo.Save(cadete);
             return RedirectToAction("Index",listaCadetes);
         }
 

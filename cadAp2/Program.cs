@@ -1,12 +1,14 @@
 
 using AutoMapper;
+using Repositorios;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
- 
-// Auto Mapper Configurations 
+// builder.Services.AddTransient<IRepositorioCadete>();
+
+/* Auto Mapper Configurations  */
 var mapperConfig = new MapperConfiguration(cfg =>
 {
     cfg.AddProfile(new PerfilDeMapeo());
