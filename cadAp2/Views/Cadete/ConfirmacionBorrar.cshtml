@@ -1,6 +1,9 @@
 @model ViewModels.BorrarCadeteViewModel
+@{
+    ViewData["Title"] = "Borrar Cadete";
+}
 
-<h2> Borrar Cadete @Model.Id</h2>
+<h2> ViewData["Title"] @Model.Id</h2>
 
 <p>¿Está seguro que quiere eliminar a <strong>@Model.Nombre</strong>?</p>
 <form asp-action="BorrarCadete" class="form-row align-items-center">

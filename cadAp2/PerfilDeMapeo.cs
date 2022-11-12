@@ -1,6 +1,6 @@
 using AutoMapper;
 using ViewModels;
-using cadAp2.Models;
+using Models;
 
 public class PerfilDeMapeo : Profile
 {

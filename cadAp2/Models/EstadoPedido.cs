@@ -1,4 +1,4 @@
-namespace cadAp2.Models 
+namespace Models 
 {
     public enum EstadoPedido {
         Pendiente,

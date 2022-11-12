@@ -6,9 +6,9 @@
 
 <h1> @ViewData["Title"] </h1>
 <hr />
-<div class="row">
+<article class="row">
     <div class="col-md-4">
-        <form asp-action="Guardar">
+        <form asp-action="GuardarPedido">
         <fieldset class="form-group row">
             <legend> Pedido nro. @ViewData["idPed"] </legend>
             <div class="form-group">
@@ -16,9 +16,26 @@
                 <input asp-for="Detalles" class="form-control" />
                 <span asp-validation-for="Detalles" class="text-danger"></span>
             </div>
+            <select name="IdCliente" asp-items="Model.ListaClientes">
+                <option value=""> Historial de Clientes </option>
+            </select>
+            <div class="form-group">
+                <input type="submit" value="Guardar Pedido" class="btn btn-primary" />
+            </div>
         </fieldset>
+    </form>
+</article>
+
+<div>
+    <a asp-action="Index">Volver a la lista</a>
+</div>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-controller="Cadete" asp-action="GuardarCliente">
         <fieldset class="form-group row">
-            <legend> Detalles del Cliente </legend>
+            <legend> Nuevo Cliente </legend>
             <div class="form-group">
                 <label asp-for="Nombre" class="control-label"></label>
                 <input asp-for="Nombre" class="form-control" />
@@ -40,7 +57,7 @@
                 <span asp-validation-for="Telefono" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Crear" class="btn btn-primary" />
+                <input type="submit" value="Crear Cliente" class="btn btn-primary" />
             </div>
         </fieldset>
     </form>
@@ -49,3 +66,7 @@
 <div>
     <a asp-action="Index">Volver a la lista</a>
 </div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

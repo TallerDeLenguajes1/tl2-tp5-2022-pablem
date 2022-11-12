@@ -11,7 +11,7 @@ namespace ViewModels
         public string? NombreCliente { get; set; }
         [Display(Name="Dirección")]
         public string? Direccion { get; set; }
-        public cadAp2.Models.EstadoPedido Estado { get; set; }
+        public Models.EstadoPedido Estado { get; set; }
         [Display(Name="Cadete")]
         public string? NombreCadete { get; set; } 
     }

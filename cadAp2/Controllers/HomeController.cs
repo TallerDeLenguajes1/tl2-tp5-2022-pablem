@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using cadAp2.Models;
+using Models;
 
 namespace cadAp2.Controllers;
 

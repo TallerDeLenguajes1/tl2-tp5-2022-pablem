@@ -1,9 +1,10 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using cadAp2.Models;
-using ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Models;
+using ViewModels;
+using Repositorios;
 
 namespace cadAp2.Controllers
 {
@@ -22,37 +23,29 @@ namespace cadAp2.Controllers
 
         public IActionResult Index()
         {
-            List<MostrarPedidoViewModel> listaView = _mapper.Map<List<MostrarPedidoViewModel>>(listaPedidos);
-
-            //Cambiar en el tp6 
-            foreach (var view in listaView)
-            {
-                foreach (var cad in CadeteController.listaCadetes)
-                {
-                    if(cad.ListaPedidos != null && cad.ListaPedidos.Any())
-                        foreach (var pedido in cad.ListaPedidos)
-                        {
-                            if (view.Id == pedido.Id)
-                                view.NombreCadete = cad.Nombre;
-                        }
-                } 
-            }
-            return View(listaView);
+            var pedidoRepo = new RepositorioPedidoSQLite();
+            var listaViewPedidos = pedidoRepo.GetAll();
+            return View(listaViewPedidos);
         }
 
         public IActionResult Alta()
         {
-            ViewData["idPed"] = numeroPedidos+1;
+            ViewData["idPed"] = numeroPedidos+1;//cambiar
+            /*se recuperan los clientes para construir una select list*/
+            var clienteRepo = new RepositorioClienteSQLite();
+            var listaClientes = clienteRepo.GetAll();
+            /**/
+            var altaView = new AltaPedidoViewModel();
+            altaView.ListaClientes = new SelectList(listaClientes, "Id", "Nombre");
             return View();
         }
 
         [HttpPost]
-        public IActionResult Guardar(AltaPedidoViewModel pedidoViewModel) 
+        public IActionResult GuardarPedido(AltaPedidoViewModel pedidoViewModel) 
         {
-            Pedido pedido = _mapper.Map<Pedido>(pedidoViewModel);
-            pedido.Id = ++numeroPedidos;
-            listaPedidos.Add(pedido);
-            return RedirectToAction("Index",listaPedidos);
+            var pedidoRepo = new RepositorioPedidoSQLite();
+            pedidoRepo.Save(pedidoViewModel);
+            return RedirectToAction("Index");
         }
 
         // GET: Pedido/Editar/5

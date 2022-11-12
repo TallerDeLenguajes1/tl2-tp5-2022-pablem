@@ -1,7 +1,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using cadAp2.Models;
+using Models;
 using ViewModels;
 using Repositorios;
 
@@ -29,9 +29,8 @@ namespace cadAp2.Controllers
         public IActionResult Index()
         {
             var cadeteRepo = new RepositorioCadeteSQLite();
-            var listaCadete = cadeteRepo.GetAll();
-            List<MostrarCadeteViewModel> listaView = _mapper.Map<List<MostrarCadeteViewModel>>(listaCadete);
-            return View(listaView); 
+            var listaCadeteView = cadeteRepo.GetAll();
+            return View(listaCadeteView); 
         }
 
         public IActionResult AltaCadete()
@@ -45,19 +44,21 @@ namespace cadAp2.Controllers
         {
             //if(ModelState.IsValid)//---------------------> ? CONSULTA
             var cadeteRepo = new RepositorioCadeteSQLite();
-            Cadete cadete = _mapper.Map<Cadete>(cadeteViewModel);
+            var cadete = _mapper.Map<Cadete>(cadeteViewModel);
             ++numeroCadetes;
             cadeteRepo.Save(cadete);
-            return RedirectToAction("Index",listaCadetes);
+            return RedirectToAction("Index");
         }
 
         // GET: Cadete/Editar/5
         public IActionResult Editar(int? id)
         {
             if (id == null) 
-                return NotFound();
+                return NotFound();//-------------------<<CONSULTA
 
-            var cadete = listaCadetes.Single(x => x.Id == id);
+            var cadeteRepo = new RepositorioCadeteSQLite();
+            var cadete = cadeteRepo.GetCadete(id);
+
             if (cadete == null)
                 return NotFound();
 
@@ -65,38 +66,38 @@ namespace cadAp2.Controllers
             return View(editarView);
         }
 
-        // POST: Cadete/Editar/5
         [HttpPost]
         public IActionResult Editar(ModificarCadeteViewModel cadeteViewModel)
         {
-            Cadete actual = _mapper.Map<Cadete>(cadeteViewModel);
-            Cadete anterior = listaCadetes.Single(x => x.Id == actual.Id);
-            anterior.Nombre = actual.Nombre;
-            anterior.Direccion = actual.Direccion;
-            anterior.Telefono = actual.Telefono;//sorry not sorry --> TP6: UPDATE
-            return RedirectToAction("Index",listaCadetes);
+            var cadeteRepo = new RepositorioCadeteSQLite();
+            var cadete = _mapper.Map<Cadete>(cadeteViewModel);
+            cadeteRepo.Update(cadete);
+            return RedirectToAction("Index");
         }
 
-        public IActionResult ConfirmacionBorrar(int id) 
+        public IActionResult ConfirmacionBorrar(int? id) 
         {
-            ///////control if(listaCadetes.any)
-            var cadete = listaCadetes.Single(x => x.Id == id); //.SingleOrDefault(); 
+            if (id == null) 
+                return NotFound();
+
+            var cadeteRepo = new RepositorioCadeteSQLite();
+            var cadete = cadeteRepo.GetCadete(id);
+            
+            if (cadete == null)
+                return NotFound();
+
             BorrarCadeteViewModel borrarView = _mapper.Map<BorrarCadeteViewModel>(cadete);
             return View(borrarView);
         }
 
-        // [HttpGet]
+        // [HttpPost] ??
         public IActionResult BorrarCadete(int id) 
         {
-            var cadete = listaCadetes.Single(x => x.Id == id);
-            if(cadete.ListaPedidos != null && cadete.ListaPedidos.Any()) {
-                foreach (var pedido in cadete.ListaPedidos) { 
-                    if(pedido.Estado == EstadoPedido.Viajando)
-                        pedido.Estado = EstadoPedido.Pendiente;   
-                }
-            }
-            listaCadetes.Remove(cadete);
-            return RedirectToAction("Index",listaCadetes);
+            // if (id != null) 
+            //     return NotFound();
+            var cadeteRepo = new RepositorioCadeteSQLite();
+            cadeteRepo.Delete(id);
+            return RedirectToAction("Index");
         }
 
         // public IActionResult PedidosCadete(int id) ///Para después

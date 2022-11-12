@@ -1,4 +1,4 @@
-namespace cadAp2.Models
+namespace Models
 {
     public class Cliente
     {
@@ -23,7 +23,7 @@ namespace cadAp2.Models
             this.telefono = telefono;
         }
         //Getters & Setters
-        // public int Id { get => id; set => id = value; }
+        public int Id { get => id; set => id = value; }
         public string Nombre { get => nombre; set => nombre = value; }
         public string Direccion { get => direccion; set => direccion = value; }
         public string ReferenciaDireccion { get => referenciaDireccion; set => referenciaDireccion = value; }
