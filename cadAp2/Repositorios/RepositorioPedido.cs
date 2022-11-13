@@ -138,7 +138,6 @@ namespace Repositorios
                 Console.WriteLine(ex);
                 return null;
             }
-            
         }
 
         public void Save(AltaPedidoViewModel pedido)
@@ -198,7 +197,40 @@ namespace Repositorios
             
         }
 
+        public void AsignarCadete(AsignarCadeteViewModel asignar)
+        {
+            try {
+                var connection = GetConnection();
+                var queryString = $"UPDATE pedido SET id_cadete = {asignar.IdCadete}, estado = 'Viajando' WHERE id_pedido = {asignar.IdPedido};";
+                var comando = new SQLiteCommand(queryString, connection);
+                comando.ExecuteNonQuery();
+                connection.Close();
+            }
+            catch(Exception ex)
+            {
+                //N
+                Console.WriteLine(ex);
+            }
+        }
 
+        public int ObtenerCadeteId(int idPedido)
+        {
+            try {
+                int idCadete;
+                var connection = GetConnection();
+                var queryString = $"SELECT id_cadete FROM pedido INNER JOIN cadete USING(id_cadete) WHERE id_pedido = {idPedido};";
+                var comando = new SQLiteCommand(queryString, connection);
+                idCadete = Convert.ToInt32(comando.ExecuteScalar());
+                connection.Close();
+                return idCadete;
+            }
+            catch(Exception ex)
+            {
+                //Nlog 
+                Console.WriteLine(ex);
+                return 0;
+            }
+        }
 
 
 

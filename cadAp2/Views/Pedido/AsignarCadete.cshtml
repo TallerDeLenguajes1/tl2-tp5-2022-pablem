@@ -1,21 +1,25 @@
 @model ViewModels.AsignarCadeteViewModel
 
 @{
-    ViewData["Title"] = "Editar Pedido";
-    string? idPedido = ViewData["idPed"]?.ToString();
+    ViewData["Title"] = "Asignar Cadete";
 }
 
 <h1> Asignar o Cambiar de Cadete </h1>
 <hr />
-<h4> Pedido nro. @idPedido</h4>
+<h4> Pedido nro. @Model.IdPedido</h4>
 
-<form asp-controller="Cadete" asp-action="GuardarPedido" method="get" class="form-row align-items-center">
-    <select name="idCad" asp-items="Model.Lista">
-        <option value="">  </option>
-    </select>
-    <input type="hidden" name="idPed" value="@idPedido" />
-    <input type="submit" value="Confirmar" class="btn btn-primary" />  
-    <a asp-action="Index" class="btn btn-secondary"> Cancelar </a>
+<form asp-action="AsignarCadete" class="form-row align-items-center">
+    <input type="hidden" asp-for="IdPedido">
+    <div class="form-group">
+        <label asp-for="IdCadete" class="control-label"></label>
+        <select asp-for="IdCadete" asp-items="Model.Cadetes">
+        </select>
+        <span asp-validation-for="IdCadete" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Confirmar" class="btn btn-primary" />  
+        <a asp-action="Index" class="btn btn-secondary"> Cancelar </a>
+    </div>
 </form>
 
 @section Scripts {

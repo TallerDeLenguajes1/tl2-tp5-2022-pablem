@@ -1,47 +1,28 @@
-@model IEnumerable<ViewModels.AsignarPedidoViewModel>
+@model ViewModels.AsignarPedidoViewModel
 
 @{
     ViewData["Title"] = "Asignar Pedido";
-    var idCadete = @ViewData["idCad"]?.ToString();
 }
 
-<h1> @ViewData["Title"] </h1>
+<h1> Asignar un Pedido </h1>
+<hr />
+@* <h4> Cadete nro. @Model.IdCadete - @Model.Nombre</h4> *@
+<h4> Cadete nro. @Model.IdCadete </h4>
 
-<h4>Cadete nro. @idCadete</h4>
+<form asp-action="AsignarPedido" class="form-row align-items-center">
+    <input type="hidden" asp-for="IdCadete">
+    <div class="form-group">
+        <label asp-for="IdPedido" class="control-label"></label>
+        <select asp-for="IdPedido" asp-items="Model.Pedidos">
+        </select>
+        <span asp-validation-for="IdPedido" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Confirmar" class="btn btn-primary" />  
+        <a asp-action="Index" class="btn btn-secondary"> Cancelar </a>
+    </div>
+</form>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DetalleCorto)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Direccion)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var ped in Model) {
-        <tr>
-            <td>
-                @ped.Id
-            </td>
-            <td>
-                @ped.DetalleCorto
-            </td>
-            <td>
-                @ped.Direccion
-            </td>
-            <td>
-                <a asp-action="GuardarPedido" asp-route-idCad="@idCadete" asp-route-idPed="@ped.Id" > Asignar </a>
-            </td> 
-        </tr>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
-    </tbody>
-</table>
-
-<p> <a asp-action="Index">Volver a la lista</a> </p>

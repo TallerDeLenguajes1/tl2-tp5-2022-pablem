@@ -19,8 +19,6 @@ public class PerfilDeMapeo : Profile
         CreateMap<ModificarPedidoViewModel, Pedido>().ReverseMap()
             .ForMember(dest => dest.IdPedido, opt => opt.MapFrom(src => src.Id));///NO se Mapea
 
-        CreateMap<AsignarPedidoViewModel, Pedido>().ReverseMap();
-
         /*Clientes*/
         CreateMap<ModificarPedidoViewModel, Cliente>().ReverseMap()
             .ForMember(dest => dest.IdCliente, opt => opt.MapFrom(src => src.Id));///NO se Mapea

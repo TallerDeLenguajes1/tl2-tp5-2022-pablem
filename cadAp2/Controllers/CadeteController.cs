@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using Models;
 using ViewModels;
 using Repositorios;
-
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace cadAp2.Controllers
 {
@@ -105,31 +105,27 @@ namespace cadAp2.Controllers
         //     return View(cadete);
         // }
 
-        // GET: Cadete/AsignarPedido/5
+        // GET: Cadete/AsignarCadete/5
         public IActionResult AsignarPedido(int id)
         {
-            ViewData["idCad"] = id;
-            var listaPendientes = PedidoController.listaPedidos.Where(ped => ped.Estado == EstadoPedido.Pendiente);
-            List<AsignarPedidoViewModel> asignarView = _mapper.Map<List<AsignarPedidoViewModel>>(listaPendientes);
+            var asignarView = new AsignarPedidoViewModel();
+            asignarView.IdCadete = id;
+            /*creo una select list con pedidos*/
+            var repoPedido = new RepositorioPedidoSQLite();
+            // var listaPedidos = repoPedido.GetAll();
+            // if(listaPedidos != null && listaPedidos.Any())
+            var listaPendientes = repoPedido.GetAll()?.Where(ped => ped.Estado == EstadoPedido.Pendiente);
+            /**/
+            asignarView.Pedidos = new SelectList(listaPendientes, "Id", "DetalleCorto");
             return View(asignarView);
         }
 
-        // GET: Cadete/GuardarPedido?idCad=1&idPed=5
-        public IActionResult GuardarPedido(int idCad, int idPed)
+        [HttpPost]
+        public IActionResult AsignarPedido(AsignarPedidoViewModel asignarView)
         {
-            var cadete = listaCadetes.Single(x => x.Id == idCad);
-            var pedido = PedidoController.listaPedidos.Single(x => x.Id == idPed);
-            foreach (var cad in listaCadetes)
-            {
-                if (cad.ListaPedidos != null && cad.ListaPedidos.Contains(pedido))
-                {
-                    cad.ListaPedidos.Remove(pedido);
-                    break;
-                }
-            }
-            pedido.Estado = EstadoPedido.Viajando;
-            cadete.ListaPedidos.Add(pedido);
-            return RedirectToAction("Index",listaCadetes);
+            var repoCadete = new RepositorioCadeteSQLite();
+            repoCadete.AsignarPedido(asignarView);
+            return RedirectToAction("Index");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

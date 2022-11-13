@@ -5,10 +5,11 @@ namespace ViewModels
 {
     public class AsignarCadeteViewModel 
     {
-        // public int Id { get; set; }
-        // public string? Nombre { get; set; }
-        // [Display(Name="Pedidos Pendientes")]
-        // public int NroPendientes { get; set; }
-        public SelectList? Lista { get; set; }
+        public int IdPedido { get; set; }
+        
+        [Required][Display(Name="Cadetes Disponibles")]
+        public int IdCadete { get; set; }
+
+        public SelectList? Cadetes { get; set; }
     }
 }

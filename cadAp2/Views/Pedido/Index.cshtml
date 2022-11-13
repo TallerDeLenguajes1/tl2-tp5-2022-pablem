@@ -56,12 +56,12 @@
                 @ped.NombreCadete
             </td>
             <td>
+                <a asp-action="AsignarCadete" asp-route-id="@ped.Id"> Asignar/Cambiar </a>
+            </td>
+            <td>
                 <a asp-action="Editar" asp-route-id="@ped.Id"> Editar </a> |
                 <a asp-action="DatosCliente" asp-route-id="@ped.Id"> Detalles </a> |
                 <a asp-action="ConfirmacionBorrar" asp-route-id="@ped.Id"> Borrar </a>
-            </td>
-            <td>
-                <a asp-action="AsignarCadete" asp-route-id="@ped.Id"> Asignar/Cambiar </a>
             </td>
         </tr>
 }

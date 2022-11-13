@@ -37,7 +37,8 @@ namespace cadAp2.Controllers
             /**/
             var altaView = new AltaPedidoViewModel();
             altaView.ListaClientes = new SelectList(listaClientes, "Id", "Nombre");
-            altaView.IdCliente = listaClientes.First().Id;
+            if(listaClientes != null && listaClientes.Any())
+                altaView.IdCliente = listaClientes.First().Id;
             return View(altaView);
         }
 
@@ -105,14 +106,27 @@ namespace cadAp2.Controllers
             return RedirectToAction("Index");
         }
 
-        // GET: Cadete/AsignarCadete/5
+        // GET: Pedido/AsignarCadete/5
         public IActionResult AsignarCadete(int id)
         {
-            ViewData["idPed"] = id;
-            // List<AsignarCadeteViewModel> asignarView = _mapper.Map<List<AsignarCadeteViewModel>>(CadeteController.listaCadetes);
             var asignarView = new AsignarCadeteViewModel();
-            asignarView.Lista = new SelectList(CadeteController.listaCadetes, "Id", "Nombre");
+            asignarView.IdPedido = id;
+            /*creo una select list con cadetes*/
+            var repoCadetes = new RepositorioCadeteSQLite();
+            var listaCadetes = repoCadetes.GetAll();
+            asignarView.Cadetes = new SelectList(listaCadetes, "Id", "Nombre");
+            /*Obtengo el cadete actual, si lo hubiera*/
+            var repoPedido = new RepositorioPedidoSQLite();
+            asignarView.IdCadete = repoPedido.ObtenerCadeteId(id);
             return View(asignarView);
+        }
+
+        [HttpPost]
+        public IActionResult AsignarCadete(AsignarCadeteViewModel asignarView)
+        {
+            var repoPedidos = new RepositorioPedidoSQLite();
+            repoPedidos.AsignarCadete(asignarView);
+            return RedirectToAction("Index");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

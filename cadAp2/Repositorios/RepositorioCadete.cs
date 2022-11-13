@@ -176,6 +176,22 @@ namespace Repositorios
             
         }
 
+        public void AsignarPedido(AsignarPedidoViewModel asignar)
+        {
+            try {
+                var connection = GetConnection();
+                var queryString = $"UPDATE pedido SET id_cadete = {asignar.IdCadete}, estado = 'Viajando' WHERE id_pedido = {asignar.IdPedido};";
+                var comando = new SQLiteCommand(queryString, connection);
+                comando.ExecuteNonQuery();
+                connection.Close();
+            }
+            catch(Exception ex)
+            {
+                //N
+                Console.WriteLine(ex);
+            }
+        }
+
 
 
 
