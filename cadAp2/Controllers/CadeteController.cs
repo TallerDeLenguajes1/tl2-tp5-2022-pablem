@@ -10,7 +10,6 @@ namespace cadAp2.Controllers
 {
     public class CadeteController : Controller
     {
-        static int numeroCadetes = 0;
         public static List<Cadete> listaCadetes = new List<Cadete>(); ////NO VA MAS (en el tp6)
         private readonly IMapper _mapper;
         private readonly ILogger<CadeteController> _logger;
@@ -35,7 +34,8 @@ namespace cadAp2.Controllers
 
         public IActionResult AltaCadete()
         {
-            ViewData["idCad"] = numeroCadetes+1;
+            var cadeteRepo = new RepositorioCadeteSQLite();
+            ViewData["idCad"] = cadeteRepo.ProxId();
             return View();
         }
 
@@ -45,7 +45,6 @@ namespace cadAp2.Controllers
             //if(ModelState.IsValid)//---------------------> ? CONSULTA
             var cadeteRepo = new RepositorioCadeteSQLite();
             var cadete = _mapper.Map<Cadete>(cadeteViewModel);
-            ++numeroCadetes;
             cadeteRepo.Save(cadete);
             return RedirectToAction("Index");
         }

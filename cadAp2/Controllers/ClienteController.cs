@@ -1,7 +1,6 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Models;
 using ViewModels;
 using Repositorios;
@@ -11,9 +10,9 @@ namespace cadAp2.Controllers
     public class ClienteController : Controller
     {
         private readonly IMapper _mapper;
-        private readonly ILogger<PedidoController> _logger;
+        private readonly ILogger<ClienteController> _logger;
 
-        public ClienteController(ILogger<PedidoController> logger, IMapper mapper)
+        public ClienteController(ILogger<ClienteController> logger, IMapper mapper)
         {
             _logger = logger;
             _mapper = mapper;
@@ -27,16 +26,68 @@ namespace cadAp2.Controllers
             return View(listaClientesView);
         }
 
-        [HttpPost]
-        public IActionResult Guardar(AltaPedidoViewModel pedidoViewModel) 
+        public IActionResult Alta()
         {
-            var cliente = _mapper.Map<Cliente>(pedidoViewModel);
             var repoCliente = new RepositorioClienteSQLite();
+            ViewData["idC"] = repoCliente.ProxId();
+            return View();
+        }
+
+        [HttpPost] //desde alta cliente 
+        public IActionResult Guardar(AltaClienteViewModel clienteViewModel) 
+        {
+            var repoCliente = new RepositorioClienteSQLite();
+            var cliente = _mapper.Map<Cliente>(clienteViewModel);
             repoCliente.Save(cliente);
             return RedirectToAction("Alta","Pedido");
         }
 
-        
+        // GET: Cliente/Editar/5
+        public IActionResult Editar(int? id)
+        {
+            if (id == null) 
+                return NotFound();
+            var repoCliente = new RepositorioClienteSQLite();
+            var cliente = repoCliente.GetCliente(id);
+            if (cliente == null)
+                return NotFound();
+            ModificarClienteViewModel editarView = _mapper.Map<ModificarClienteViewModel>(cliente);
+            return View(editarView);
+        }
+
+        [HttpPost]
+        public IActionResult Editar(ModificarClienteViewModel clienteViewModel)
+        {
+            var repoCliente = new RepositorioClienteSQLite();
+            var cliente = _mapper.Map<Cliente>(clienteViewModel);
+            repoCliente.Update(cliente);
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult ConfirmacionBorrar(int? id) 
+        {
+            if (id == null) 
+                return NotFound();
+            var repoCliente = new RepositorioClienteSQLite();
+            var cliente = repoCliente.GetCliente(id);
+            if (cliente == null)
+                return NotFound();
+            BorrarClienteViewModel borrarView = _mapper.Map<BorrarClienteViewModel>(cliente);
+            return View(borrarView);
+        }
+
+        // [HttpPost] ??
+        public IActionResult Borrar(int id)
+        {
+            // if (id != null) 
+            //     return NotFound();
+            var repoCliente = new RepositorioClienteSQLite();
+            repoCliente.Delete(id);
+            return RedirectToAction("Index");
+        }
+
+
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

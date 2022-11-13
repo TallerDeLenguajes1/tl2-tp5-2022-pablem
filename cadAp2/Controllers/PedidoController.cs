@@ -10,7 +10,6 @@ namespace cadAp2.Controllers
 {
     public class PedidoController : Controller
     {
-        static int numeroPedidos;
         public static List<Pedido> listaPedidos = new List<Pedido>();
         private readonly IMapper _mapper;
         private readonly ILogger<PedidoController> _logger;
@@ -30,7 +29,8 @@ namespace cadAp2.Controllers
 
         public IActionResult Alta()
         {
-            ViewData["idPed"] = numeroPedidos+1;//cambiar
+            var pedidoRepo = new RepositorioPedidoSQLite();
+            ViewData["idPed"] = pedidoRepo.ProxId();
             /*se recuperan los clientes para construir una select list*/
             var clienteRepo = new RepositorioClienteSQLite();
             var listaClientes = clienteRepo.GetAll();
@@ -69,8 +69,10 @@ namespace cadAp2.Controllers
         public IActionResult Editar(ModificarPedidoViewModel pedidoViewModel)
         {
             Pedido pedido = _mapper.Map<Pedido>(pedidoViewModel);
+            pedido.Id = pedidoViewModel.IdPedido;///NO se Mapea solo
             Cliente cliente = _mapper.Map<Cliente>(pedidoViewModel);
-
+            cliente.Id = pedidoViewModel.IdCliente;///NO se Mapea solo
+            
             var pedidoRepo = new RepositorioPedidoSQLite();
             pedidoRepo.Update(pedido);
 

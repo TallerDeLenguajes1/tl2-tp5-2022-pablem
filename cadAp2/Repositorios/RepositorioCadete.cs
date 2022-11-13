@@ -32,20 +32,24 @@ namespace Repositorios
             return connection;
         }
 
-        // public int ProxId()
-        // {
-        //     try {
-        //         var connection = GetConnection();
-        //         var queryString = $"SELECT max(id_cadete)+1 FROM cadete;";
-        //         var comando = new SQLiteCommand(queryString, connection);
-
-        //     }
-        //     catch(Exception ex)
-        //     {
-        //         //Nlog console
-                
-        //     }
-        // }
+        public int? ProxId()
+        {
+            try {
+                int idNuevo;
+                var connection = GetConnection();
+                var queryString = $"SELECT max(id_cadete)+1 FROM cadete;";
+                var comando = new SQLiteCommand(queryString, connection);
+                idNuevo = Convert.ToInt32(comando.ExecuteScalar());
+                connection.Close();
+                return idNuevo;
+            }
+            catch(Exception ex)
+            {
+                //Nlog 
+                Console.WriteLine(ex);
+                return null;
+            }
+        }
 
         public Cadete? GetCadete(int? id)
         {

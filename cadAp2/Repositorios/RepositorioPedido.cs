@@ -15,6 +15,25 @@ namespace Repositorios
             return connection;
         }
 
+        public int? ProxId()
+        {
+            try {
+                int idNuevo;
+                var connection = GetConnection();
+                var queryString = $"SELECT max(id_pedido)+1 FROM pedido;";
+                var comando = new SQLiteCommand(queryString, connection);
+                idNuevo = Convert.ToInt32(comando.ExecuteScalar());
+                connection.Close();
+                return idNuevo;
+            }
+            catch(Exception ex)
+            {
+                //Nlog 
+                Console.WriteLine(ex);
+                return null;
+            }
+        }
+
         public Pedido? GetPedido(int? id)
         {
             try {
@@ -61,7 +80,7 @@ namespace Repositorios
                         nuevo = new ModificarPedidoViewModel();
                         nuevo.IdPedido = Convert.ToInt32(reader["id_pedido"]);
                         nuevo.IdCliente = Convert.ToInt32(reader["id_cliente"]);
-                        nuevo.Detalles = reader["detalle"].ToString()!;
+                        nuevo.Detalle = reader["detalle"].ToString()!;
                         Enum.TryParse(reader["estado"].ToString(), out EstadoPedido estadoAux);
                         nuevo.Estado = estadoAux;
                         nuevo.Nombre = reader["cliente"].ToString();
@@ -125,7 +144,7 @@ namespace Repositorios
         public void Save(AltaPedidoViewModel pedido)
         {
             try {
-                string? detalle = pedido.Detalles;
+                string? detalle = pedido.Detalle;
                 string? estado = EstadoPedido.Pendiente.ToString();
                 int id = pedido.IdCliente;
                 var connection = GetConnection();

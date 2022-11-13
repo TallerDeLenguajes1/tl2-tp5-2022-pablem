@@ -9,7 +9,7 @@ namespace ViewModels
         public int IdCliente { get; set; }
 
         [Required][StringLength(100)][Display(Name="Detalles del pedido")]
-        public string? Detalles { get; set; }
+        public string? Detalle { get; set; }
 
         [Required]
         public Models.EstadoPedido Estado { get; set; }

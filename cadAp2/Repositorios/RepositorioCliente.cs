@@ -14,6 +14,58 @@ namespace Repositorios
             return connection;
         }
 
+        public int? ProxId()
+        {
+            try {
+                int idNuevo;
+                var connection = GetConnection();
+                var queryString = $"SELECT max(id_cliente)+1 FROM cliente;";
+                var comando = new SQLiteCommand(queryString, connection);
+                idNuevo = Convert.ToInt32(comando.ExecuteScalar());
+                connection.Close();
+                return idNuevo;
+            }
+            catch(Exception ex)
+            {
+                //Nlog 
+                Console.WriteLine(ex);
+                return null;
+            }
+        }
+
+        public Cliente? GetCliente(int? id)
+        {
+            try {
+                var connection = GetConnection();
+                var queryString = $"SELECT * FROM cliente WHERE id_cliente = {id};";
+                var comando = new SQLiteCommand(queryString, connection);
+
+                var nuevo = new Cliente();
+                using (var reader = comando.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        nuevo = new Cliente();
+                        nuevo.Id = Convert.ToInt32(reader["id_cliente"]);
+                        nuevo.Nombre = reader["cliente"].ToString();
+                        nuevo.Telefono = reader["telefono"].ToString();
+                        nuevo.Direccion = reader["direccion"].ToString();
+                        if (!reader.IsDBNull(reader.GetOrdinal("referencia_direccion")))
+                            nuevo.ReferenciaDireccion = reader["referencia_direccion"].ToString()!;
+                    }
+                }
+                connection.Close();
+                return nuevo;
+            }
+            catch(Exception ex)
+            {
+                //NLOG
+                Console.WriteLine("get cadeteid error");
+                Console.WriteLine(ex);
+                return null;
+            }
+        }
+
         public List<Cliente>? GetAll()
         {
             try {
@@ -89,6 +141,29 @@ namespace Repositorios
                 Console.WriteLine(ex);
             }
         }
+
+        public void Delete(int id)
+        {
+            try
+            {
+                var connection = GetConnection();
+                var queryString = $"DELETE FROM cliente WHERE id_cliente = {id};";
+                var comando = new SQLiteCommand(queryString, connection);
+                comando.ExecuteNonQuery();
+                connection.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("delete id error");
+                Console.WriteLine(ex);
+                //throw;
+            }
+        }
+
+
+
+
+
 
        
 

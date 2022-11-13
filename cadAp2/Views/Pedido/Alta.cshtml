@@ -12,27 +12,37 @@
         <fieldset class="form-group row">
             <legend> Pedido nro. @ViewData["idPed"] </legend>
             <div class="form-group">
-                <label asp-for="Detalles" class="control-label"></label>
-                <input asp-for="Detalles" class="form-control" />
-                <span asp-validation-for="Detalles" class="text-danger"></span>
+                <label asp-for="Detalle" class="control-label"></label>
+                <input asp-for="Detalle" class="form-control" />
+                <span asp-validation-for="Detalle" class="text-danger"></span>
             </div>
-            <select asp-for="IdCliente" asp-items="Model.ListaClientes">
-            </select>
+            <div class="form-group, row">
+                <label asp-for="IdCliente" class="control-label"></label>
+                <div class="col-md-6">
+                    <select asp-for="IdCliente" asp-items="Model.ListaClientes">
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <a asp-controller="Cliente" asp-action="Alta" class="btn btn-info"> Nuevo Cliente </a>
+                </div>
+                <span asp-validation-for="IdCliente" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <input type="submit" value="Guardar Pedido" class="btn btn-primary" />
             </div>
         </fieldset>
-    </form>
+        </form>
+    </div>
 </article>
 
 <div>
     <a asp-action="Index">Volver a la lista</a>
 </div>
-@* SEPARAR LOS FORMULARIOS, AGREGAR BOTÓN DE NUEVO CLIENTE *@
+@* 
 <hr />
 <article class="row">
     <div class="col-md-4">
-        <form asp-controller="Cliente" asp-action="Guardar">
+        <form asp-controller="Cliente" asp-action="GuardarDesdePedido">
         <fieldset class="form-group row">
             <legend> Nuevo Cliente </legend>
             <div class="form-group">
@@ -48,7 +58,6 @@
             <div class="form-group">
                 <label asp-for="ReferenciaDireccion" class="control-label"></label>
                 <input asp-for="ReferenciaDireccion" class="form-control" />
-                @* <span asp-validation-for="ReferenciaDireccion" class="text-danger"></span> *@
             </div>
             <div class="form-group">
                 <label asp-for="Telefono" class="control-label"></label>
@@ -61,10 +70,9 @@
         </fieldset>
     </form>
 </article>
-
 <div>
     <a asp-action="Index">Volver a la lista</a>
-</div>
+</div> *@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

@@ -1,32 +1,17 @@
-@model ViewModels.ModificarPedidoViewModel
+@model ViewModels.ModificarClienteViewModel
 
 @{
-    ViewData["Title"] = "Editar Pedido";
+    ViewData["Title"] = "Editar Cliente";
 }
 
-<h1>Modificar el pedido</h1>
+<h1>Modificar datos del Cliente</h1>
+<h4>Cliente nro. @Model.Id</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Editar">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <fieldset class="form-group row">
-            <legend> Pedido nro. @ViewData["idPed"] </legend>
-            <input type="hidden" asp-for="IdPedido" />
-            <div class="form-group">
-                <label asp-for="Detalle" class="control-label"></label>
-                <input asp-for="Detalle" class="form-control" />
-                <span asp-validation-for="Detalle" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Estado"></label>
-                <select asp-for="Estado" asp-items="Html.GetEnumSelectList<Models.EstadoPedido>()">
-                </select>
-            </div>
-        </fieldset>
-        <fieldset class="form-group row">
-            <legend> Detalles del Cliente </legend>
-            <input type="hidden" asp-for="IdCliente" />
+            <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="Nombre" class="control-label"></label>
                 <input asp-for="Nombre" class="form-control" />
@@ -50,7 +35,6 @@
             <div class="form-group">
                 <input type="submit" value="Guardar" class="btn btn-primary" />
             </div>
-        </fieldset>
         </form>
     </div>
 </div>
