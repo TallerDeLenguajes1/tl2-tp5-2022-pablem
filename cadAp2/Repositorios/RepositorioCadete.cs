@@ -74,6 +74,7 @@ namespace Repositorios
             {
                 //NLOG
                 Console.WriteLine("get cadeteid error");
+                Console.WriteLine(ex);
                 return null;
             }
         }
@@ -129,6 +130,7 @@ namespace Repositorios
             catch(Exception ex)
             {
                 //N
+                Console.WriteLine(ex);
             }
         }
 
@@ -147,6 +149,7 @@ namespace Repositorios
             catch(Exception ex)
             {
                 //N
+                Console.WriteLine(ex);
             }
         }
 
@@ -163,6 +166,7 @@ namespace Repositorios
             catch (Exception ex)
             {
                 Console.WriteLine("delete id error");
+                Console.WriteLine(ex);
                 //throw;
             }
             

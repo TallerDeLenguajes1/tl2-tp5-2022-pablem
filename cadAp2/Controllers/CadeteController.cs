@@ -91,13 +91,13 @@ namespace cadAp2.Controllers
         }
 
         // [HttpPost] ??
-        public IActionResult BorrarCadete(int id) 
+        public IActionResult BorrarCadete(int id)
         {
             // if (id != null) 
             //     return NotFound();
             var cadeteRepo = new RepositorioCadeteSQLite();
             cadeteRepo.Delete(id);
-            return RedirectToAction("Index");
+            return RedirectToAction("Index"); ///Si borro cadete los pedidos viajando pasan a pendientes 
         }
 
         // public IActionResult PedidosCadete(int id) ///Para después

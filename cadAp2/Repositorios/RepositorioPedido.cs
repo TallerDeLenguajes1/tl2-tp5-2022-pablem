@@ -5,26 +5,8 @@ using ViewModels;
 
 namespace Repositorios
 {
-    // public interface IRepositorioCadete
-    // {
-    //     List<Cadete> GetCadetes();
-    // }
-
     public class RepositorioPedidoSQLite// : IRepositorioCadete
     {
-
-        // private readonly IConfiguration config;
-        // private readonly string cadenaDeConexion;
-        /* programacion funcional: variable inmutable, 
-        solo se modifica en el constructor o en la declaracion */
-        
-
-        // private readonly string cadenaDeConexion;
-        // public RepositorioCadeteSQLite(IConfiguration configuration)
-        // {
-        //     this.cadenaDeConexion = configuration.GetConnectionString("default");
-        // }
-
         private SQLiteConnection GetConnection()
         {
             var cadenaDeConexion = @"Data Source=cadeteria.db;Version=3;";
@@ -33,24 +15,8 @@ namespace Repositorios
             return connection;
         }
 
-        // public int ProxId()
-        // {
-        //     try {
-        //         var connection = GetConnection();
-        //         var queryString = $"SELECT max(id_cadete)+1 FROM cadete;";
-        //         var comando = new SQLiteCommand(queryString, connection);
-
-        //     }
-        //     catch(Exception ex)
-        //     {
-        //         //Nlog console
-                
-        //     }
-        // }
-
         public Pedido? GetPedido(int? id)
         {
-            //var cadenaDeConexion = @"Data Source=cadeteria.db;Version=3;";
             try {
                 var connection = GetConnection();
                 var queryString = $"SELECT * FROM pedido WHERE id_pedido = {id};";
@@ -63,8 +29,9 @@ namespace Repositorios
                     {
                         nuevo = new Pedido();
                         nuevo.Id = Convert.ToInt32(reader["id_pedido"]);
-                        nuevo.Detalles = reader["detalle"].ToString();
-                        nuevo.Estado = (EstadoPedido)reader["estado"];
+                        nuevo.Detalle = reader["detalle"].ToString()!;
+                        Enum.TryParse(reader["estado"].ToString(), out EstadoPedido estadoAux);
+                        nuevo.Estado = estadoAux;
                     }
                 }
                 connection.Close();
@@ -74,6 +41,44 @@ namespace Repositorios
             {
                 //NLOG
                 Console.WriteLine("get pedoido por id error");
+                Console.WriteLine(ex);
+                return null;
+            }
+        }
+
+        public ModificarPedidoViewModel? GetPedidoYCliente(int? id)
+        {
+            try {
+                var connection = GetConnection();
+                var queryString = $"SELECT * FROM pedido INNER JOIN cliente USING(id_cliente) WHERE id_pedido = {id};";
+                var comando = new SQLiteCommand(queryString, connection);
+
+                var nuevo = new ModificarPedidoViewModel();
+                using (var reader = comando.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        nuevo = new ModificarPedidoViewModel();
+                        nuevo.IdPedido = Convert.ToInt32(reader["id_pedido"]);
+                        nuevo.IdCliente = Convert.ToInt32(reader["id_cliente"]);
+                        nuevo.Detalles = reader["detalle"].ToString()!;
+                        Enum.TryParse(reader["estado"].ToString(), out EstadoPedido estadoAux);
+                        nuevo.Estado = estadoAux;
+                        nuevo.Nombre = reader["cliente"].ToString();
+                        nuevo.Direccion = reader["direccion"].ToString();
+                        if (!reader.IsDBNull(reader.GetOrdinal("referencia_direccion")))
+                            nuevo.ReferenciaDireccion = reader["referencia_direccion"].ToString();
+                        nuevo.Telefono = reader["telefono"].ToString();
+                    }
+                }
+                connection.Close();
+                return nuevo;
+            }
+            catch(Exception ex)
+            {
+                //NLOG
+                Console.WriteLine("error get peiddo con cliente");
+                Console.WriteLine(ex);
                 return null;
             }
         }
@@ -131,18 +136,19 @@ namespace Repositorios
             }
             catch(Exception ex)
             {
-                //N
+                //nLOg
+                Console.WriteLine(ex);
             }
         }
 
-        public void Update(Cadete cadete)
+        public void Update(Pedido pedido)
         {
             try {
-                string? nombre = cadete.Nombre;
-                string? direccion = cadete.Direccion;
-                string? telefono = cadete.Telefono;
+                int id = pedido.Id;
+                string? detalles = pedido.Detalle;
+                string? estado = pedido.Estado.ToString();
                 var connection = GetConnection();
-                var queryString = $"UPDATE cadete SET cadete = '{nombre}', direccion = '{direccion}', telefono = '{telefono}' WHERE id_cadete = {cadete.Id};";
+                var queryString = $"UPDATE pedido SET detalle = '{detalles}', estado = '{estado}' WHERE id_pedido = {id};";
                 var comando = new SQLiteCommand(queryString, connection);
                 comando.ExecuteNonQuery();
                 connection.Close();
@@ -150,6 +156,7 @@ namespace Repositorios
             catch(Exception ex)
             {
                 //N
+                Console.WriteLine(ex);
             }
         }
 
@@ -158,7 +165,7 @@ namespace Repositorios
             try
             {
                 var connection = GetConnection();
-                var queryString = $"DELETE FROM cadete WHERE id_cadete = {id};";
+                var queryString = $"DELETE FROM pedido WHERE id_pedido = {id};";
                 var comando = new SQLiteCommand(queryString, connection);
                 comando.ExecuteNonQuery();
                 connection.Close();
@@ -166,6 +173,7 @@ namespace Repositorios
             catch (Exception ex)
             {
                 Console.WriteLine("delete id error");
+                Console.WriteLine(ex);
                 //throw;
             }
             

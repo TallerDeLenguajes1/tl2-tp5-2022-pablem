@@ -4,7 +4,9 @@ namespace ViewModels
 {
     public class ModificarPedidoViewModel
     {
-        public int Id { get; set; }
+        public int IdPedido { get; set; }
+
+        public int IdCliente { get; set; }
 
         [Required][StringLength(100)][Display(Name="Detalles del pedido")]
         public string? Detalles { get; set; }

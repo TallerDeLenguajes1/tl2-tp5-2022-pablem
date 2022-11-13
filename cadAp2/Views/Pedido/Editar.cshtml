@@ -10,9 +10,9 @@
     <div class="col-md-4">
         <form asp-action="Editar">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
             <fieldset class="form-group row">
             <legend> Pedido nro. @ViewData["idPed"] </legend>
+            <input type="hidden" asp-for="IdPedido" />
             <div class="form-group">
                 <label asp-for="Detalles" class="control-label"></label>
                 <input asp-for="Detalles" class="form-control" />
@@ -21,12 +21,12 @@
             <div class="form-group">
                 <label asp-for="Estado"></label>
                 <select asp-for="Estado" asp-items="Html.GetEnumSelectList<Models.EstadoPedido>()">
-                    <option value=""> </option>
                 </select>
             </div>
         </fieldset>
         <fieldset class="form-group row">
             <legend> Detalles del Cliente </legend>
+            <input type="hidden" asp-for="IdCliente" />
             <div class="form-group">
                 <label asp-for="Nombre" class="control-label"></label>
                 <input asp-for="Nombre" class="form-control" />

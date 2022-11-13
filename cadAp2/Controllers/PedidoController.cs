@@ -37,7 +37,8 @@ namespace cadAp2.Controllers
             /**/
             var altaView = new AltaPedidoViewModel();
             altaView.ListaClientes = new SelectList(listaClientes, "Id", "Nombre");
-            return View();
+            altaView.IdCliente = listaClientes.First().Id;
+            return View(altaView);
         }
 
         [HttpPost]
@@ -51,34 +52,43 @@ namespace cadAp2.Controllers
         // GET: Pedido/Editar/5
         public IActionResult Editar(int? id)
         {
-            ViewData["idPed"] = id;
-            
             if (id == null) 
+                return NotFound();//-------------------<<CONSULTA
+
+            var pedidoRepo = new RepositorioPedidoSQLite();
+            var pedidoView = pedidoRepo.GetPedidoYCliente(id);
+
+            if (pedidoView == null)
                 return NotFound();
 
-            var pedido = listaPedidos.Single(x => x.Id == id);
-            if (pedido == null)
-                return NotFound();
-
-            ModificarPedidoViewModel editarView = _mapper.Map<ModificarPedidoViewModel>(pedido);
-            return View(editarView);
+            return View(pedidoView);
         }
 
         // POST: Cadete/Editar/5
         [HttpPost]
         public IActionResult Editar(ModificarPedidoViewModel pedidoViewModel)
         {
-            Pedido actual = _mapper.Map<Pedido>(pedidoViewModel);
-            Pedido anterior = listaPedidos.Single(x => x.Id == actual.Id);
-            anterior.Detalles = actual.Detalles;
-            anterior.Estado = actual.Estado;//sorry not sorry --> TP6: UPDATE
-            return RedirectToAction("Index",listaPedidos);
+            Pedido pedido = _mapper.Map<Pedido>(pedidoViewModel);
+            Cliente cliente = _mapper.Map<Cliente>(pedidoViewModel);
+
+            var pedidoRepo = new RepositorioPedidoSQLite();
+            pedidoRepo.Update(pedido);
+
+            var clienteRepo = new RepositorioClienteSQLite();
+            clienteRepo.Update(cliente);
+
+            return RedirectToAction("Index");
         }
 
         // GET: Pedido/ConfirmacionBorrar/5
-        public IActionResult ConfirmacionBorrar(int id) 
+        public IActionResult ConfirmacionBorrar(int? id) 
         {
-            var pedido = listaPedidos.Single(x => x.Id == id); //.SingleOrDefault(); 
+            if (id == null) 
+                return NotFound();//-------------------<<CONSULTA
+            var pedidoRepo = new RepositorioPedidoSQLite();
+            var pedido = pedidoRepo.GetPedido(id);
+            if (pedido == null)
+                return NotFound();
             BorrarPedidoViewModel borrarView = _mapper.Map<BorrarPedidoViewModel>(pedido);
             return View(borrarView);
         }
@@ -86,8 +96,11 @@ namespace cadAp2.Controllers
         // [HttpGet]
         public IActionResult Borrar(int id) 
         {
-            listaPedidos.Remove(listaPedidos.Single(x => x.Id == id));
-            return RedirectToAction("Index",listaPedidos);
+            // if (id != null) 
+            //     return NotFound();
+            var pedidoRepo = new RepositorioPedidoSQLite();
+            pedidoRepo.Delete(id);
+            return RedirectToAction("Index");
         }
 
         // GET: Cadete/AsignarCadete/5

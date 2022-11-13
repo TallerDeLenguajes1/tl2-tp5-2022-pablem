@@ -16,8 +16,7 @@
                 <input asp-for="Detalles" class="form-control" />
                 <span asp-validation-for="Detalles" class="text-danger"></span>
             </div>
-            <select name="IdCliente" asp-items="Model.ListaClientes">
-                <option value=""> Historial de Clientes </option>
+            <select asp-for="IdCliente" asp-items="Model.ListaClientes">
             </select>
             <div class="form-group">
                 <input type="submit" value="Guardar Pedido" class="btn btn-primary" />
@@ -29,11 +28,11 @@
 <div>
     <a asp-action="Index">Volver a la lista</a>
 </div>
-
+@* SEPARAR LOS FORMULARIOS, AGREGAR BOTÓN DE NUEVO CLIENTE *@
 <hr />
-<div class="row">
+<article class="row">
     <div class="col-md-4">
-        <form asp-controller="Cadete" asp-action="GuardarCliente">
+        <form asp-controller="Cliente" asp-action="Guardar">
         <fieldset class="form-group row">
             <legend> Nuevo Cliente </legend>
             <div class="form-group">

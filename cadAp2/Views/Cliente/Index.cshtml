@@ -1,0 +1,59 @@
+@model IEnumerable<ViewModels.MostrarClienteViewModel>
+
+@{
+    ViewData["Title"] = "Lista de Clientes";
+}
+
+<h1> @ViewData["Title"] </h1>
+
+<p>
+    <a asp-action="AltaCadete">Nuevo Cliente</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Telefono)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Direccion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReferenciaDireccion)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var cliente in Model) {
+        <tr>
+            <td>
+                @cliente.Id
+            </td>
+            <td>
+                @cliente.Nombre
+            </td>
+            <td>
+                @cliente.Telefono
+            </td>
+            <td>
+                @cliente.Direccion
+            </td>
+            <td>
+                @cliente.ReferenciaDireccion
+            </td>
+            <td>
+                <a asp-action="PedidosCliente" asp-route-id="@cliente.Id"> Pedidos </a> |
+                <a asp-action="Editar" asp-route-id="@cliente.Id"> Editar </a> |
+                <a asp-action="ConfirmacionBorrar" asp-route-id="@cliente.Id"> Borrar </a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
