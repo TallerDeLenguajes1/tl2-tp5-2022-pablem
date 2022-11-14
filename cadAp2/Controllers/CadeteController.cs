@@ -128,6 +128,15 @@ namespace cadAp2.Controllers
             return RedirectToAction("Index");
         }
 
+        public IActionResult PedidosCadete(int id)
+        {
+            var repoCadete = new RepositorioCadeteSQLite();
+            ViewData["titulo"] = "Pedidos de " + repoCadete.GetCadete(id).Nombre; //esto es una prueba
+            var repoPedido = new RepositorioPedidoSQLite();
+            var listaPedidosView = repoPedido.PedidosPorCadete(id);
+            return View(listaPedidosView);
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

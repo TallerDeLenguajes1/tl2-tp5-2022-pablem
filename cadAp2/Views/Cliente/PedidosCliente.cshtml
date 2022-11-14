@@ -1,0 +1,64 @@
+@model IEnumerable<ViewModels.MostrarPedidoViewModel>
+
+@{
+    ViewData["Title"] = ViewData["titulo"];
+}
+
+<h1> @ViewData["Title"] </h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DetalleCorto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Direccion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Estado)
+            </th>
+            <th>
+                @Html.DisplayNameFor(Model => Model.NombreCadete)
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var ped in Model) {
+        <tr>
+            <td>
+                @ped.Id
+            </td>
+            <td>
+                @ped.DetalleCorto
+            </td>
+            <td>
+                @ped.Direccion
+            </td>
+            <td>
+                @ped.Estado
+            </td>
+            <td>
+                @ped.NombreCadete
+            </td>
+            <td>
+                <a asp-controller="Pedido" asp-action="AsignarCadete" asp-route-id="@ped.Id"> Asignar/Cambiar </a>
+            </td>
+            <td>
+                <a asp-controller="Pedido" asp-action="Editar" asp-route-id="@ped.Id"> Editar </a> |
+                <a asp-controller="Pedido" asp-action="DatosCliente" asp-route-id="@ped.Id"> Detalles </a> |
+                <a asp-controller="Pedido" asp-action="ConfirmacionBorrar" asp-route-id="@ped.Id"> Borrar </a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+<p>
+    <a asp-action="Index">Volver a la lista</a>
+</p>

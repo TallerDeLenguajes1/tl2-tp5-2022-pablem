@@ -236,5 +236,87 @@ namespace Repositorios
 
 
 
+
+        /*en proceso de refactorizar*/
+
+
+
+        
+        public List<MostrarPedidoViewModel>? PedidosPorCadete(int id)
+        {
+            try {
+                var listaPedidos = new List<MostrarPedidoViewModel>();
+                var queryString = $"SELECT id_pedido, (SUBSTRING(detalle, 1, 15) || '...') AS detalleCorto, estado, cliente, direccion FROM pedido INNER JOIN cliente USING(id_cliente) WHERE id_cadete = {id};";
+                var connection = GetConnection();
+                var comando = new SQLiteCommand(queryString, connection);
+
+                using (var reader = comando.ExecuteReader())
+                {
+                    MostrarPedidoViewModel nuevo;
+                    while (reader.Read())
+                    {
+                        nuevo = new MostrarPedidoViewModel();
+                        nuevo.Id = Convert.ToInt32(reader["id_pedido"]);
+                        nuevo.DetalleCorto = reader["detalleCorto"].ToString();
+                        Enum.TryParse(reader["estado"].ToString(), out EstadoPedido estadoAux);
+                        nuevo.Estado = estadoAux;
+                        nuevo.NombreCliente = reader["cliente"].ToString();
+                        nuevo.Direccion = reader["direccion"].ToString();
+                        listaPedidos.Add(nuevo);
+                    }
+                }
+                connection.Close();
+                return listaPedidos;
+            }
+            catch(Exception ex)
+            {
+                //NLOG
+                Console.WriteLine("error recuperando pedidos por cadete");
+                Console.WriteLine(ex);
+                return null;
+            }
+        }
+
+        public List<MostrarPedidoViewModel>? PedidosPorCliente(int id)
+        {
+            try {
+                var listaPedidos = new List<MostrarPedidoViewModel>();
+                var queryString = $"SELECT id_pedido, (SUBSTRING(detalle, 1, 15) || '...') AS detalleCorto, estado, cliente, direccion FROM pedido INNER JOIN cliente USING(id_cliente) WHERE id_cliente = {id};";
+                var connection = GetConnection();
+                var comando = new SQLiteCommand(queryString, connection);
+
+                using (var reader = comando.ExecuteReader())
+                {
+                    MostrarPedidoViewModel nuevo;
+                    while (reader.Read())
+                    {
+                        nuevo = new MostrarPedidoViewModel();
+                        nuevo.Id = Convert.ToInt32(reader["id_pedido"]);
+                        nuevo.DetalleCorto = reader["detalleCorto"].ToString();
+                        Enum.TryParse(reader["estado"].ToString(), out EstadoPedido estadoAux);
+                        nuevo.Estado = estadoAux;
+                        nuevo.NombreCliente = reader["cliente"].ToString();
+                        nuevo.Direccion = reader["direccion"].ToString();
+                        listaPedidos.Add(nuevo);
+                    }
+                }
+                connection.Close();
+                return listaPedidos;
+            }
+            catch(Exception ex)
+            {
+                //NLOG
+                Console.WriteLine("error recuperando pedidos por cadete");
+                Console.WriteLine(ex);
+                return null;
+            }
+        }
+
+
+
+
+
+
+
     }
 }

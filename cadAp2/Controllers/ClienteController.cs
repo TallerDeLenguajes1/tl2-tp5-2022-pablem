@@ -86,6 +86,14 @@ namespace cadAp2.Controllers
             return RedirectToAction("Index");
         }
 
+        public IActionResult PedidosCliente(int id)
+        {
+            var repoCliente = new RepositorioClienteSQLite();
+            ViewData["titulo"] = "Pedidos de " + repoCliente.GetCliente(id).Nombre; //esto es una prueba
+            var repoPedido = new RepositorioPedidoSQLite();
+            var listaPedidosView = repoPedido.PedidosPorCliente(id);
+            return View(listaPedidosView);
+        }
 
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
