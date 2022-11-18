@@ -18,16 +18,11 @@ namespace Repositorios
     public class RepositorioCadeteSQLite : IRepositorioCadete
     {
 
-        // private readonly IConfiguration config;
         // private readonly string cadenaDeConexion;
-        /* programacion funcional: variable inmutable, 
-        solo se modifica en el constructor o en la declaracion */
 
-
-        // private readonly string cadenaDeConexion;
         // public RepositorioCadeteSQLite(IConfiguration configuration)
         // {
-        //     this.cadenaDeConexion = configuration.GetConnectionString("default");
+        //     this.cadenaDeConexion = configuration.GetConnectionString("Default");
         // }
 
         private SQLiteConnection GetConnection()
@@ -60,7 +55,6 @@ namespace Repositorios
 
         public Cadete? GetById(int? id)
         {
-            //var cadenaDeConexion = @"Data Source=cadeteria.db;Version=3;";
             try
             {
                 var connection = GetConnection();

@@ -5,7 +5,11 @@ using Repositorios;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
 builder.Services.AddControllersWithViews();
+
+
+/*Dependecies*/
 builder.Services.AddTransient<IRepositorioCadete, RepositorioCadeteSQLite>();
 builder.Services.AddTransient<IRepositorioCliente, RepositorioClienteSQLite>();
 builder.Services.AddTransient<IRepositorioPedido, RepositorioPedidoSQLite>();
