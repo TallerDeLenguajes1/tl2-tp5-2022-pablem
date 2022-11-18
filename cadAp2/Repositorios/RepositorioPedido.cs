@@ -1,31 +1,24 @@
 
 using System.Data.SQLite;
+using CadenasDeconexion;
 using Models;
-using ViewModels;
+using ViewModels;/////NO VAA corregir!
 
 namespace Repositorios
 {
-    public interface IRepositorioPedido
-    {
-        int? ProxId();
-        Pedido? GetById(int? id);
-        List<MostrarPedidoViewModel>? GetAll();
-        ModificarPedidoViewModel? GetPedidoYCliente(int? id);
-        void Save(AltaPedidoViewModel pedido);
-        void Update(Pedido pedido);
-        void Delete(int id);
-        List<MostrarPedidoViewModel>? PedidosPorCadete(int id);
-        List<MostrarPedidoViewModel>? PedidosPorCliente(int id);
-        int ObtenerCadeteId(int idPedido);
-        void AsignarCadete(AsignarCadeteViewModel asignar);
-    }
-
     public class RepositorioPedidoSQLite : IRepositorioPedido
     {
+        private readonly string _cadenaDeConexion;
+
+        public RepositorioPedidoSQLite(ICadenaDeConexion cadenaDeConexion)
+        {
+            _cadenaDeConexion = cadenaDeConexion.GetCadena();
+        }
+
         private SQLiteConnection GetConnection()
         {
-            var cadenaDeConexion = @"Data Source=cadeteria.db;Version=3;";
-            var connection = new SQLiteConnection(cadenaDeConexion);
+            // var cadenaDeConexion = @"Data Source=cadeteria.db;Version=3;";
+            var connection = new SQLiteConnection(_cadenaDeConexion);
             connection.Open();
             return connection;
         }

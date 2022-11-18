@@ -1,5 +1,6 @@
 
 using AutoMapper;
+using CadenasDeconexion;
 using Repositorios;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +14,7 @@ builder.Services.AddControllersWithViews();
 // builder.Services.AddLogging();
 
 /*Inyección Repositorios*/
+builder.Services.AddSingleton<ICadenaDeConexion, CadenaParaSqlite>();
 builder.Services.AddTransient<IRepositorioCadete, RepositorioCadeteSQLite>();
 builder.Services.AddTransient<IRepositorioCliente, RepositorioClienteSQLite>();
 builder.Services.AddTransient<IRepositorioPedido, RepositorioPedidoSQLite>();

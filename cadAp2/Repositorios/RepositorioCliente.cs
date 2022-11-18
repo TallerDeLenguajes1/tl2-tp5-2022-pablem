@@ -1,25 +1,23 @@
 using System.Data.SQLite;
+using CadenasDeconexion;
 using Models;
 // using ViewModels;
 
 namespace Repositorios
 {
-    public interface IRepositorioCliente
-    {
-        int? ProxId();
-        Cliente? GetById(int? id);
-        List<Cliente>? GetAll();
-        void Save(Cliente cliente);
-        void Update(Cliente cliente);
-        void Delete(int id);
-    }
-
     public class RepositorioClienteSQLite : IRepositorioCliente
     {
+        private readonly string _cadenaDeConexion;
+
+        public RepositorioClienteSQLite(ICadenaDeConexion cadenaDeConexion)
+        {
+            _cadenaDeConexion = cadenaDeConexion.GetCadena();
+        }
+
         private SQLiteConnection GetConnection()
         {
-            var cadenaDeConexion = @"Data Source=cadeteria.db;Version=3;";
-            var connection = new SQLiteConnection(cadenaDeConexion);
+            // var cadenaDeConexion = @"Data Source=cadeteria.db;Version=3;";
+            var connection = new SQLiteConnection(_cadenaDeConexion);
             connection.Open();
             return connection;
         }
