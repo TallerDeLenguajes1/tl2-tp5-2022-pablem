@@ -8,9 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddMvc();
-builder.Services.AddControllers();
-builder.Services.AddLogging();
+// builder.Services.AddMvc();
+// builder.Services.AddControllers();
+// builder.Services.AddLogging();
 
 /*Inyección Repositorios*/
 builder.Services.AddTransient<IRepositorioCadete, RepositorioCadeteSQLite>();
