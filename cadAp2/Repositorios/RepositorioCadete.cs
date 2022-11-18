@@ -18,16 +18,16 @@ namespace Repositorios
     public class RepositorioCadeteSQLite : IRepositorioCadete
     {
 
-        // private readonly string cadenaDeConexion;
+        private readonly string cadenaDeConexion;
 
-        // public RepositorioCadeteSQLite(IConfiguration configuration)
-        // {
-        //     this.cadenaDeConexion = configuration.GetConnectionString("Default");
-        // }
+        public RepositorioCadeteSQLite(IConfiguration configuration)
+        {
+            this.cadenaDeConexion = configuration.GetConnectionString("Default");
+        }
 
         private SQLiteConnection GetConnection()
         {
-            var cadenaDeConexion = @"Data Source=cadeteria.db;Version=3;";
+            // var cadenaDeConexion = @"Data Source=cadeteria.db;Version=3;";
             var connection = new SQLiteConnection(cadenaDeConexion);
             connection.Open();
             return connection;

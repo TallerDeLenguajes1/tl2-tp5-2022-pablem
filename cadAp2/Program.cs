@@ -8,8 +8,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddMvc();
+builder.Services.AddControllers();
+builder.Services.AddLogging();
 
-/*Dependecies*/
+/*Inyección Repositorios*/
 builder.Services.AddTransient<IRepositorioCadete, RepositorioCadeteSQLite>();
 builder.Services.AddTransient<IRepositorioCliente, RepositorioClienteSQLite>();
 builder.Services.AddTransient<IRepositorioPedido, RepositorioPedidoSQLite>();
@@ -21,7 +24,6 @@ var mapperConfig = new MapperConfiguration(cfg =>
 });
 IMapper mapper = mapperConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
-builder.Services.AddMvc();
 
 var app = builder.Build();
 
