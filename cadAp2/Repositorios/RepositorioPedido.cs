@@ -34,7 +34,7 @@ namespace Repositorios
             }
         }
 
-        public Pedido? GetPedido(int? id)
+        public Pedido? GetById(int? id)
         {
             try {
                 var connection = GetConnection();

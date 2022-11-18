@@ -33,7 +33,7 @@ namespace Repositorios
             }
         }
 
-        public Cliente? GetCliente(int? id)
+        public Cliente? GetById(int? id)
         {
             try {
                 var connection = GetConnection();

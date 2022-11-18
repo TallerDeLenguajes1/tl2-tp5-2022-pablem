@@ -48,7 +48,7 @@ namespace cadAp2.Controllers
             if (id == null) 
                 return NotFound();
             var repoCliente = new RepositorioClienteSQLite();
-            var cliente = repoCliente.GetCliente(id);
+            var cliente = repoCliente.GetById(id);
             if (cliente == null)
                 return NotFound();
             ModificarClienteViewModel editarView = _mapper.Map<ModificarClienteViewModel>(cliente);
@@ -69,7 +69,7 @@ namespace cadAp2.Controllers
             if (id == null) 
                 return NotFound();
             var repoCliente = new RepositorioClienteSQLite();
-            var cliente = repoCliente.GetCliente(id);
+            var cliente = repoCliente.GetById(id);
             if (cliente == null)
                 return NotFound();
             BorrarClienteViewModel borrarView = _mapper.Map<BorrarClienteViewModel>(cliente);
@@ -89,7 +89,7 @@ namespace cadAp2.Controllers
         public IActionResult PedidosCliente(int id)
         {
             var repoCliente = new RepositorioClienteSQLite();
-            ViewData["titulo"] = "Pedidos de " + repoCliente.GetCliente(id).Nombre; //esto es una prueba
+            ViewData["titulo"] = "Pedidos de " + repoCliente.GetById(id).Nombre; //esto es una prueba
             var repoPedido = new RepositorioPedidoSQLite();
             var listaPedidosView = repoPedido.PedidosPorCliente(id);
             return View(listaPedidosView);

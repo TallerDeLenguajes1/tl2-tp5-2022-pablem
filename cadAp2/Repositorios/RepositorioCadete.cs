@@ -51,7 +51,7 @@ namespace Repositorios
             }
         }
 
-        public Cadete? GetCadete(int? id)
+        public Cadete? GetById(int? id)
         {
             //var cadenaDeConexion = @"Data Source=cadeteria.db;Version=3;";
             try {

@@ -89,7 +89,7 @@ namespace cadAp2.Controllers
             if (id == null) 
                 return NotFound();//-------------------<<CONSULTA
             var pedidoRepo = new RepositorioPedidoSQLite();
-            var pedido = pedidoRepo.GetPedido(id);
+            var pedido = pedidoRepo.GetById(id);
             if (pedido == null)
                 return NotFound();
             BorrarPedidoViewModel borrarView = _mapper.Map<BorrarPedidoViewModel>(pedido);

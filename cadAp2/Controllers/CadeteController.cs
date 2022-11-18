@@ -56,7 +56,7 @@ namespace cadAp2.Controllers
                 return NotFound();//-------------------<<CONSULTA
 
             var cadeteRepo = new RepositorioCadeteSQLite();
-            var cadete = cadeteRepo.GetCadete(id);
+            var cadete = cadeteRepo.GetById(id);
 
             if (cadete == null)
                 return NotFound();
@@ -80,7 +80,7 @@ namespace cadAp2.Controllers
                 return NotFound();
 
             var cadeteRepo = new RepositorioCadeteSQLite();
-            var cadete = cadeteRepo.GetCadete(id);
+            var cadete = cadeteRepo.GetById(id);
             
             if (cadete == null)
                 return NotFound();
@@ -131,7 +131,7 @@ namespace cadAp2.Controllers
         public IActionResult PedidosCadete(int id)
         {
             var repoCadete = new RepositorioCadeteSQLite();
-            ViewData["titulo"] = "Pedidos de " + repoCadete.GetCadete(id).Nombre; //esto es una prueba
+            ViewData["titulo"] = "Pedidos de " + repoCadete.GetById(id).Nombre; //esto es una prueba
             var repoPedido = new RepositorioPedidoSQLite();
             var listaPedidosView = repoPedido.PedidosPorCadete(id);
             return View(listaPedidosView);
