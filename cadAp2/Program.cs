@@ -6,7 +6,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-// builder.Services.AddTransient<IRepositorioCadete>();
+builder.Services.AddTransient<IRepositorioCadete, RepositorioCadeteSQLite>();
+builder.Services.AddTransient<IRepositorioCliente, RepositorioClienteSQLite>();
+builder.Services.AddTransient<IRepositorioPedido, RepositorioPedidoSQLite>();
 
 /* Auto Mapper Configurations  */
 var mapperConfig = new MapperConfiguration(cfg =>

@@ -4,7 +4,17 @@ using Models;
 
 namespace Repositorios
 {
-    public class RepositorioClienteSQLite
+    public interface IRepositorioCliente
+    {
+        int? ProxId();
+        Cliente? GetById(int? id);
+        List<Cliente>? GetAll();
+        void Save(Cliente cliente);
+        void Update(Cliente cliente);
+        void Delete(int id);
+    }
+
+    public class RepositorioClienteSQLite : IRepositorioCliente
     {
         private SQLiteConnection GetConnection()
         {
@@ -16,7 +26,8 @@ namespace Repositorios
 
         public int? ProxId()
         {
-            try {
+            try
+            {
                 int idNuevo;
                 var connection = GetConnection();
                 var queryString = $"SELECT max(id_cliente)+1 FROM cliente;";
@@ -25,7 +36,7 @@ namespace Repositorios
                 connection.Close();
                 return idNuevo;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 //Nlog 
                 Console.WriteLine(ex);
@@ -35,7 +46,8 @@ namespace Repositorios
 
         public Cliente? GetById(int? id)
         {
-            try {
+            try
+            {
                 var connection = GetConnection();
                 var queryString = $"SELECT * FROM cliente WHERE id_cliente = {id};";
                 var comando = new SQLiteCommand(queryString, connection);
@@ -57,7 +69,7 @@ namespace Repositorios
                 connection.Close();
                 return nuevo;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 //NLOG
                 Console.WriteLine("get cadeteid error");
@@ -68,7 +80,8 @@ namespace Repositorios
 
         public List<Cliente>? GetAll()
         {
-            try {
+            try
+            {
                 var listaClientes = new List<Cliente>();
                 var connection = GetConnection();
                 var queryString = "SELECT * FROM cliente ORDER BY id_cliente DESC;";
@@ -92,7 +105,7 @@ namespace Repositorios
                 connection.Close();
                 return listaClientes;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 //Nlog
                 Console.WriteLine("obtener todos los clientes error");
@@ -101,20 +114,21 @@ namespace Repositorios
             }
         }
 
-         public void Save(Cliente cliente)
+        public void Save(Cliente cliente)
         {
-            try {
+            try
+            {
                 string? nombre = cliente.Nombre;
                 string? direccion = cliente.Direccion;
                 string? telefono = cliente.Telefono;
-                string? refDireccion = (cliente.ReferenciaDireccion == null || cliente.ReferenciaDireccion == "") ? "null": "'"+cliente.ReferenciaDireccion+"'";
+                string? refDireccion = (cliente.ReferenciaDireccion == null || cliente.ReferenciaDireccion == "") ? "null" : "'" + cliente.ReferenciaDireccion + "'";
                 var connection = GetConnection();
                 var queryString = $"INSERT INTO cliente(cliente, direccion, telefono, referencia_direccion ) VALUES ('{nombre}', '{direccion}', '{telefono}', {refDireccion});";
                 var comando = new SQLiteCommand(queryString, connection);
                 comando.ExecuteNonQuery();
                 connection.Close();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 //N
                 Console.WriteLine(ex);
@@ -123,19 +137,20 @@ namespace Repositorios
 
         public void Update(Cliente cliente)
         {
-            try {
+            try
+            {
                 int id = cliente.Id;
                 string? nombre = cliente.Nombre;
                 string? telefono = cliente.Telefono;
                 string? direccion = cliente.Direccion;
-                string? refDireccion = (cliente.ReferenciaDireccion == null || cliente.ReferenciaDireccion == "") ? "null": "'"+cliente.ReferenciaDireccion+"'";
+                string? refDireccion = (cliente.ReferenciaDireccion == null || cliente.ReferenciaDireccion == "") ? "null" : "'" + cliente.ReferenciaDireccion + "'";
                 var connection = GetConnection();
                 var queryString = $"UPDATE cliente SET cliente = '{nombre}', telefono = '{telefono}', direccion = '{direccion}', referencia_direccion = {refDireccion} WHERE id_cliente = {id};";
                 var comando = new SQLiteCommand(queryString, connection);
                 comando.ExecuteNonQuery();
                 connection.Close();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 //N
                 Console.WriteLine(ex);
@@ -165,7 +180,7 @@ namespace Repositorios
 
 
 
-       
+
 
     }
 }

@@ -10,32 +10,32 @@ namespace cadAp2.Controllers
 {
     public class CadeteController : Controller
     {
-        public static List<Cadete> listaCadetes = new List<Cadete>(); ////NO VA MAS (en el tp6)
         private readonly IMapper _mapper;
         private readonly ILogger<CadeteController> _logger;
-        // private readonly IRepositorioCadete cadeteRepo;
+        private readonly IRepositorioCadete _repoCad;
+        private readonly IRepositorioPedido _repoPed;
+        private readonly IRepositorioCliente _repoCli;
         //private readonly IConfiguration config;
 
-        // public CadeteController(ILogger<CadeteController> logger, IMapper mapper, IRepositorioCadete cadeteRepo)
-        public CadeteController(ILogger<CadeteController> logger, IMapper mapper)//, IConfiguration config)
+        public CadeteController(ILogger<CadeteController> logger, IMapper mapper, IRepositorioCadete repoCad, IRepositorioPedido repoPed, IRepositorioCliente repoCli)//, IConfiguration config)
         {
             _logger = logger;
             _mapper = mapper;
-            // this.cadeteRepo = cadeteRepo;
+            _repoCad = repoCad;
+            _repoPed = repoPed;
+            _repoCli = repoCli;
             // this.config = config;
         }
 
         public IActionResult Index()
         {
-            var cadeteRepo = new RepositorioCadeteSQLite();
-            var listaCadeteView = cadeteRepo.GetAll();
+            var listaCadeteView = _repoCad.GetAll();
             return View(listaCadeteView); 
         }
 
         public IActionResult AltaCadete()
         {
-            var cadeteRepo = new RepositorioCadeteSQLite();
-            ViewData["idCad"] = cadeteRepo.ProxId();
+            ViewData["idCad"] = _repoCad.ProxId();
             return View();
         }
 
@@ -43,9 +43,8 @@ namespace cadAp2.Controllers
         public IActionResult GuardarCadete(AltaCadeteViewModel cadeteViewModel) 
         {
             //if(ModelState.IsValid)//---------------------> ? CONSULTA
-            var cadeteRepo = new RepositorioCadeteSQLite();
             var cadete = _mapper.Map<Cadete>(cadeteViewModel);
-            cadeteRepo.Save(cadete);
+            _repoCad.Save(cadete);
             return RedirectToAction("Index");
         }
 
@@ -54,13 +53,9 @@ namespace cadAp2.Controllers
         {
             if (id == null) 
                 return NotFound();//-------------------<<CONSULTA
-
-            var cadeteRepo = new RepositorioCadeteSQLite();
-            var cadete = cadeteRepo.GetById(id);
-
+            var cadete = _repoCad.GetById(id);
             if (cadete == null)
                 return NotFound();
-
             ModificarCadeteViewModel editarView = _mapper.Map<ModificarCadeteViewModel>(cadete);
             return View(editarView);
         }
@@ -68,9 +63,8 @@ namespace cadAp2.Controllers
         [HttpPost]
         public IActionResult Editar(ModificarCadeteViewModel cadeteViewModel)
         {
-            var cadeteRepo = new RepositorioCadeteSQLite();
             var cadete = _mapper.Map<Cadete>(cadeteViewModel);
-            cadeteRepo.Update(cadete);
+            _repoCad.Update(cadete);
             return RedirectToAction("Index");
         }
 
@@ -78,9 +72,7 @@ namespace cadAp2.Controllers
         {
             if (id == null) 
                 return NotFound();
-
-            var cadeteRepo = new RepositorioCadeteSQLite();
-            var cadete = cadeteRepo.GetById(id);
+            var cadete = _repoCad.GetById(id);
             
             if (cadete == null)
                 return NotFound();
@@ -94,16 +86,9 @@ namespace cadAp2.Controllers
         {
             // if (id != null) 
             //     return NotFound();
-            var cadeteRepo = new RepositorioCadeteSQLite();
-            cadeteRepo.Delete(id);
+            _repoCad.Delete(id);
             return RedirectToAction("Index"); ///Si borro cadete los pedidos viajando pasan a pendientes 
         }
-
-        // public IActionResult PedidosCadete(int id) ///Para después
-        // {
-        //     var cadete = listaCadetes.Single(x => x.Id == id);
-        //     return View(cadete);
-        // }
 
         // GET: Cadete/AsignarCadete/5
         public IActionResult AsignarPedido(int id)
@@ -111,10 +96,9 @@ namespace cadAp2.Controllers
             var asignarView = new AsignarPedidoViewModel();
             asignarView.IdCadete = id;
             /*creo una select list con pedidos*/
-            var repoPedido = new RepositorioPedidoSQLite();
-            // var listaPedidos = repoPedido.GetAll();
-            // if(listaPedidos != null && listaPedidos.Any())
-            var listaPendientes = repoPedido.GetAll()?.Where(ped => ped.Estado == EstadoPedido.Pendiente);
+            // var listaPendientes = repoPedido.GetPendientes();
+            // if(listaPendientes != null && listaPendientes.Any())
+            var listaPendientes = _repoPed.GetAll()?.Where(ped => ped.Estado == EstadoPedido.Pendiente);
             /**/
             asignarView.Pedidos = new SelectList(listaPendientes, "Id", "DetalleCorto");
             return View(asignarView);
@@ -123,17 +107,14 @@ namespace cadAp2.Controllers
         [HttpPost]
         public IActionResult AsignarPedido(AsignarPedidoViewModel asignarView)
         {
-            var repoCadete = new RepositorioCadeteSQLite();
-            repoCadete.AsignarPedido(asignarView);
+            _repoCad.AsignarPedido(asignarView);
             return RedirectToAction("Index");
         }
 
         public IActionResult PedidosCadete(int id)
         {
-            var repoCadete = new RepositorioCadeteSQLite();
-            ViewData["titulo"] = "Pedidos de " + repoCadete.GetById(id).Nombre; //esto es una prueba
-            var repoPedido = new RepositorioPedidoSQLite();
-            var listaPedidosView = repoPedido.PedidosPorCadete(id);
+            ViewData["titulo"] = "Pedidos de " + _repoCad.GetById(id)!.Nombre;
+            var listaPedidosView = _repoPed.PedidosPorCadete(id);
             return View(listaPedidosView);
         }
 

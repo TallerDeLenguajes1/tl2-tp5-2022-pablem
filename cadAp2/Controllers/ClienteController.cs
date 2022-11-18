@@ -11,34 +11,37 @@ namespace cadAp2.Controllers
     {
         private readonly IMapper _mapper;
         private readonly ILogger<ClienteController> _logger;
+        private readonly IRepositorioCadete _repoCad;
+        private readonly IRepositorioPedido _repoPed;
+        private readonly IRepositorioCliente _repoCli;
 
-        public ClienteController(ILogger<ClienteController> logger, IMapper mapper)
+        public ClienteController(ILogger<ClienteController> logger, IMapper mapper, IRepositorioCadete repoCad, IRepositorioPedido repoPed, IRepositorioCliente repoCli)
         {
             _logger = logger;
             _mapper = mapper;
+            _repoCad = repoCad;
+            _repoPed = repoPed;
+            _repoCli = repoCli;
         }
 
         public IActionResult Index()
         {
-            var repoCliente = new RepositorioClienteSQLite();
-            var listaClientes = repoCliente.GetAll();
+            var listaClientes = _repoCli.GetAll();
             var listaClientesView = _mapper.Map<List<MostrarClienteViewModel>>(listaClientes);
             return View(listaClientesView);
         }
 
         public IActionResult Alta()
         {
-            var repoCliente = new RepositorioClienteSQLite();
-            ViewData["idC"] = repoCliente.ProxId();
+            ViewData["idC"] = _repoCli.ProxId();
             return View();
         }
 
         [HttpPost] //desde alta cliente 
         public IActionResult Guardar(AltaClienteViewModel clienteViewModel) 
         {
-            var repoCliente = new RepositorioClienteSQLite();
             var cliente = _mapper.Map<Cliente>(clienteViewModel);
-            repoCliente.Save(cliente);
+            _repoCli.Save(cliente);
             return RedirectToAction("Alta","Pedido");
         }
 
@@ -47,8 +50,7 @@ namespace cadAp2.Controllers
         {
             if (id == null) 
                 return NotFound();
-            var repoCliente = new RepositorioClienteSQLite();
-            var cliente = repoCliente.GetById(id);
+            var cliente = _repoCli.GetById(id);
             if (cliente == null)
                 return NotFound();
             ModificarClienteViewModel editarView = _mapper.Map<ModificarClienteViewModel>(cliente);
@@ -58,9 +60,8 @@ namespace cadAp2.Controllers
         [HttpPost]
         public IActionResult Editar(ModificarClienteViewModel clienteViewModel)
         {
-            var repoCliente = new RepositorioClienteSQLite();
             var cliente = _mapper.Map<Cliente>(clienteViewModel);
-            repoCliente.Update(cliente);
+            _repoCli.Update(cliente);
             return RedirectToAction("Index");
         }
 
@@ -68,8 +69,7 @@ namespace cadAp2.Controllers
         {
             if (id == null) 
                 return NotFound();
-            var repoCliente = new RepositorioClienteSQLite();
-            var cliente = repoCliente.GetById(id);
+            var cliente = _repoCli.GetById(id);
             if (cliente == null)
                 return NotFound();
             BorrarClienteViewModel borrarView = _mapper.Map<BorrarClienteViewModel>(cliente);
@@ -81,20 +81,16 @@ namespace cadAp2.Controllers
         {
             // if (id != null) 
             //     return NotFound();
-            var repoCliente = new RepositorioClienteSQLite();
-            repoCliente.Delete(id);
+            _repoCli.Delete(id);
             return RedirectToAction("Index");
         }
 
         public IActionResult PedidosCliente(int id)
         {
-            var repoCliente = new RepositorioClienteSQLite();
-            ViewData["titulo"] = "Pedidos de " + repoCliente.GetById(id).Nombre; //esto es una prueba
-            var repoPedido = new RepositorioPedidoSQLite();
-            var listaPedidosView = repoPedido.PedidosPorCliente(id);
+            ViewData["titulo"] = "Pedidos de " + _repoCli.GetById(id).Nombre; //esto es una prueba
+            var listaPedidosView = _repoPed.PedidosPorCliente(id);
             return View(listaPedidosView);
         }
-
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

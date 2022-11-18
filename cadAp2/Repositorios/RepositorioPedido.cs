@@ -5,7 +5,22 @@ using ViewModels;
 
 namespace Repositorios
 {
-    public class RepositorioPedidoSQLite// : IRepositorioCadete
+    public interface IRepositorioPedido
+    {
+        int? ProxId();
+        Pedido? GetById(int? id);
+        List<MostrarPedidoViewModel>? GetAll();
+        ModificarPedidoViewModel? GetPedidoYCliente(int? id);
+        void Save(AltaPedidoViewModel pedido);
+        void Update(Pedido pedido);
+        void Delete(int id);
+        List<MostrarPedidoViewModel>? PedidosPorCadete(int id);
+        List<MostrarPedidoViewModel>? PedidosPorCliente(int id);
+        int ObtenerCadeteId(int idPedido);
+        void AsignarCadete(AsignarCadeteViewModel asignar);
+    }
+
+    public class RepositorioPedidoSQLite : IRepositorioPedido
     {
         private SQLiteConnection GetConnection()
         {
@@ -17,7 +32,8 @@ namespace Repositorios
 
         public int? ProxId()
         {
-            try {
+            try
+            {
                 int idNuevo;
                 var connection = GetConnection();
                 var queryString = $"SELECT max(id_pedido)+1 FROM pedido;";
@@ -26,7 +42,7 @@ namespace Repositorios
                 connection.Close();
                 return idNuevo;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 //Nlog 
                 Console.WriteLine(ex);
@@ -36,7 +52,8 @@ namespace Repositorios
 
         public Pedido? GetById(int? id)
         {
-            try {
+            try
+            {
                 var connection = GetConnection();
                 var queryString = $"SELECT * FROM pedido WHERE id_pedido = {id};";
                 var comando = new SQLiteCommand(queryString, connection);
@@ -56,7 +73,7 @@ namespace Repositorios
                 connection.Close();
                 return nuevo;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 //NLOG
                 Console.WriteLine("get pedoido por id error");
@@ -67,7 +84,8 @@ namespace Repositorios
 
         public ModificarPedidoViewModel? GetPedidoYCliente(int? id)
         {
-            try {
+            try
+            {
                 var connection = GetConnection();
                 var queryString = $"SELECT * FROM pedido INNER JOIN cliente USING(id_cliente) WHERE id_pedido = {id};";
                 var comando = new SQLiteCommand(queryString, connection);
@@ -93,7 +111,7 @@ namespace Repositorios
                 connection.Close();
                 return nuevo;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 //NLOG
                 Console.WriteLine("error get peiddo con cliente");
@@ -104,7 +122,8 @@ namespace Repositorios
 
         public List<MostrarPedidoViewModel>? GetAll()
         {
-            try {
+            try
+            {
                 var listaPedidos = new List<MostrarPedidoViewModel>();
                 var connection = GetConnection();
                 // var queryString = "SELECT id_pedido, detalle, cliente, (SUBSTRING(detalle, 1, 15) || '...') AS detalleCorto, estado, cadete FROM pedido INNER JOIN cliente USING(id_cliente) LEFT JOIN cadete USING(id_cadete);";
@@ -131,7 +150,7 @@ namespace Repositorios
                 connection.Close();
                 return listaPedidos;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 //NLOG
                 Console.WriteLine("recuperando todos los pedidos error");
@@ -142,7 +161,8 @@ namespace Repositorios
 
         public void Save(AltaPedidoViewModel pedido)
         {
-            try {
+            try
+            {
                 string? detalle = pedido.Detalle;
                 string? estado = EstadoPedido.Pendiente.ToString();
                 int id = pedido.IdCliente;
@@ -152,7 +172,7 @@ namespace Repositorios
                 comando.ExecuteNonQuery();
                 connection.Close();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 //nLOg
                 Console.WriteLine(ex);
@@ -161,7 +181,8 @@ namespace Repositorios
 
         public void Update(Pedido pedido)
         {
-            try {
+            try
+            {
                 int id = pedido.Id;
                 string? detalles = pedido.Detalle;
                 string? estado = pedido.Estado.ToString();
@@ -171,7 +192,7 @@ namespace Repositorios
                 comando.ExecuteNonQuery();
                 connection.Close();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 //N
                 Console.WriteLine(ex);
@@ -194,19 +215,20 @@ namespace Repositorios
                 Console.WriteLine(ex);
                 //throw;
             }
-            
+
         }
 
         public void AsignarCadete(AsignarCadeteViewModel asignar)
         {
-            try {
+            try
+            {
                 var connection = GetConnection();
                 var queryString = $"UPDATE pedido SET id_cadete = {asignar.IdCadete}, estado = 'Viajando' WHERE id_pedido = {asignar.IdPedido};";
                 var comando = new SQLiteCommand(queryString, connection);
                 comando.ExecuteNonQuery();
                 connection.Close();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 //N
                 Console.WriteLine(ex);
@@ -215,7 +237,8 @@ namespace Repositorios
 
         public int ObtenerCadeteId(int idPedido)
         {
-            try {
+            try
+            {
                 int idCadete;
                 var connection = GetConnection();
                 var queryString = $"SELECT id_cadete FROM pedido INNER JOIN cadete USING(id_cadete) WHERE id_pedido = {idPedido};";
@@ -224,7 +247,7 @@ namespace Repositorios
                 connection.Close();
                 return idCadete;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 //Nlog 
                 Console.WriteLine(ex);
@@ -241,10 +264,11 @@ namespace Repositorios
 
 
 
-        
+
         public List<MostrarPedidoViewModel>? PedidosPorCadete(int id)
         {
-            try {
+            try
+            {
                 var listaPedidos = new List<MostrarPedidoViewModel>();
                 var queryString = $"SELECT id_pedido, (SUBSTRING(detalle, 1, 15) || '...') AS detalleCorto, estado, cliente, direccion FROM pedido INNER JOIN cliente USING(id_cliente) WHERE id_cadete = {id};";
                 var connection = GetConnection();
@@ -268,7 +292,7 @@ namespace Repositorios
                 connection.Close();
                 return listaPedidos;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 //NLOG
                 Console.WriteLine("error recuperando pedidos por cadete");
@@ -279,7 +303,8 @@ namespace Repositorios
 
         public List<MostrarPedidoViewModel>? PedidosPorCliente(int id)
         {
-            try {
+            try
+            {
                 var listaPedidos = new List<MostrarPedidoViewModel>();
                 var queryString = $"SELECT id_pedido, (SUBSTRING(detalle, 1, 15) || '...') AS detalleCorto, estado, cliente, direccion FROM pedido INNER JOIN cliente USING(id_cliente) WHERE id_cliente = {id};";
                 var connection = GetConnection();
@@ -303,7 +328,7 @@ namespace Repositorios
                 connection.Close();
                 return listaPedidos;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 //NLOG
                 Console.WriteLine("error recuperando pedidos por cadete");

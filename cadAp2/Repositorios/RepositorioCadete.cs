@@ -4,19 +4,25 @@ using ViewModels;
 
 namespace Repositorios
 {
-    // public interface IRepositorioCadete
-    // {
-    //     List<Cadete> GetCadetes();
-    // }
+    public interface IRepositorioCadete
+    {
+        int? ProxId();
+        Cadete? GetById(int? id);
+        List<MostrarCadeteViewModel>? GetAll();
+        void Save(Cadete cadete);
+        void Update(Cadete cadete);
+        void Delete(int id);
+        void AsignarPedido(AsignarPedidoViewModel asignar);
+    }
 
-    public class RepositorioCadeteSQLite// : IRepositorioCadete
+    public class RepositorioCadeteSQLite : IRepositorioCadete
     {
 
         // private readonly IConfiguration config;
         // private readonly string cadenaDeConexion;
         /* programacion funcional: variable inmutable, 
         solo se modifica en el constructor o en la declaracion */
-        
+
 
         // private readonly string cadenaDeConexion;
         // public RepositorioCadeteSQLite(IConfiguration configuration)
@@ -34,7 +40,8 @@ namespace Repositorios
 
         public int? ProxId()
         {
-            try {
+            try
+            {
                 int idNuevo;
                 var connection = GetConnection();
                 var queryString = $"SELECT max(id_cadete)+1 FROM cadete;";
@@ -43,7 +50,7 @@ namespace Repositorios
                 connection.Close();
                 return idNuevo;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 //Nlog 
                 Console.WriteLine(ex);
@@ -54,7 +61,8 @@ namespace Repositorios
         public Cadete? GetById(int? id)
         {
             //var cadenaDeConexion = @"Data Source=cadeteria.db;Version=3;";
-            try {
+            try
+            {
                 var connection = GetConnection();
                 var queryString = $"SELECT * FROM cadete WHERE id_cadete = {id};";
                 var comando = new SQLiteCommand(queryString, connection);
@@ -74,7 +82,7 @@ namespace Repositorios
                 connection.Close();
                 return nuevo;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 //NLOG
                 Console.WriteLine("get cadeteid error");
@@ -85,7 +93,8 @@ namespace Repositorios
 
         public List<MostrarCadeteViewModel>? GetAll()
         {
-            try {
+            try
+            {
                 var listaCadetes = new List<MostrarCadeteViewModel>();
                 var connection = GetConnection();
                 // var queryString = "SELECT cadete.*, count(id_pedido) AS pedidos FROM cadete LEFT JOIN pedido USING(id_cadete) WHERE estado NOT IN ('Entregado', 'Anulado') OR estado IS NULL GROUP BY id_cadete;";
@@ -109,19 +118,20 @@ namespace Repositorios
                 connection.Close();
                 return listaCadetes;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 //Nlog
                 Console.WriteLine("mostrar cadetes error");
                 Console.WriteLine(ex);
                 return null;
             }
-            
+
         }
 
         public void Save(Cadete cadete)
         {
-            try {
+            try
+            {
                 string? nombre = cadete.Nombre;
                 string? direccion = cadete.Direccion;
                 string? telefono = cadete.Telefono;
@@ -131,7 +141,7 @@ namespace Repositorios
                 comando.ExecuteNonQuery();
                 connection.Close();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 //N
                 Console.WriteLine(ex);
@@ -140,7 +150,8 @@ namespace Repositorios
 
         public void Update(Cadete cadete)
         {
-            try {
+            try
+            {
                 string? nombre = cadete.Nombre;
                 string? direccion = cadete.Direccion;
                 string? telefono = cadete.Telefono;
@@ -150,7 +161,7 @@ namespace Repositorios
                 comando.ExecuteNonQuery();
                 connection.Close();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 //N
                 Console.WriteLine(ex);
@@ -173,19 +184,20 @@ namespace Repositorios
                 Console.WriteLine(ex);
                 //throw;
             }
-            
+
         }
 
         public void AsignarPedido(AsignarPedidoViewModel asignar)
         {
-            try {
+            try
+            {
                 var connection = GetConnection();
                 var queryString = $"UPDATE pedido SET id_cadete = {asignar.IdCadete}, estado = 'Viajando' WHERE id_pedido = {asignar.IdPedido};";
                 var comando = new SQLiteCommand(queryString, connection);
                 comando.ExecuteNonQuery();
                 connection.Close();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 //N
                 Console.WriteLine(ex);
