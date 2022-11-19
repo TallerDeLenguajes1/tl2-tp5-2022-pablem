@@ -1,5 +1,4 @@
 using Models;
-using ViewModels;
 
 namespace Repositorios
 {
@@ -11,6 +10,5 @@ namespace Repositorios
         void Save(Cadete cadete);
         void Update(Cadete cadete);
         void Delete(int id);
-        void AsignarPedido(AsignarPedidoViewModel asignar);
     }
 }

@@ -1,4 +1,3 @@
-using System.Data.SQLite;
 using Models;
 
 namespace Repositorios

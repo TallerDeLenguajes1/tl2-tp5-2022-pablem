@@ -1,8 +1,6 @@
-
 using System.Data.SQLite;
 using CadenasDeconexion;
 using Models;
-using ViewModels;/////NO VAA corregir!
 
 namespace Repositorios
 {
