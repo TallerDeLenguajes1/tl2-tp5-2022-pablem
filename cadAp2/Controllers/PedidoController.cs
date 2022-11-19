@@ -27,14 +27,19 @@ namespace cadAp2.Controllers
 
         public IActionResult Index()
         {
-            var listaViewPedidos = _repoPed.GetAll();
-            return View(listaViewPedidos);
+            var pedidos = _repoPed.GetAll();
+            var pedidosView = _mapper.Map<List<MostrarPedidoViewModel>>(pedidos);
+            // foreach (var pedView in pedidosView)
+            // {
+            //     pedView.NombreCadete = _repoPed.ObtenerCadete(pedView.Id);
+            // }////(posible mejora)
+            return View(pedidosView);
         }
 
         public IActionResult Alta()
         {
-            ViewData["idPed"] = _repoPed.ProxId();
-            /*se recuperan los clientes para construir una select list*/
+            ViewData["idPed"] = _repoPed.GetLastId()+1;
+            /*se recuperan los clientes para construir una select list item*/
             var listaClientes = _repoCli.GetAll();
             var altaView = new AltaPedidoViewModel();
             altaView.ListaClientes = new SelectList(listaClientes, "Id", "Nombre");
@@ -44,9 +49,11 @@ namespace cadAp2.Controllers
         }
 
         [HttpPost]
-        public IActionResult GuardarPedido(AltaPedidoViewModel pedidoViewModel) 
+        public IActionResult GuardarPedido(AltaPedidoViewModel pedidoView) 
         {
-            _repoPed.Save(pedidoViewModel);
+            var idCliente = pedidoView.IdCliente;
+            var nuevoPedido = _mapper.Map<Pedido>(pedidoView);
+            _repoPed.Save(nuevoPedido, idCliente);
             return RedirectToAction("Index");
         }
 
@@ -54,27 +61,29 @@ namespace cadAp2.Controllers
         public IActionResult Editar(int? id)
         {
             if (id == null) 
-                return NotFound();//-------------------<<CONSULTA
-
-            var pedidoView = _repoPed.GetPedidoYCliente(id);
-
-            if (pedidoView == null)
                 return NotFound();
 
+            var pedido = _repoPed.GetById(id);
+            if (pedido == null)
+                return NotFound();
+            var pedidoView = _mapper.Map<ModificarPedidoViewModel>(pedido);
+            pedidoView.IdPedido = pedido.Id;///NO se Mapea solo
+            pedidoView.IdCliente = pedido.Cliente.Id;///NO se Mapea solo
             return View(pedidoView);
         }
 
         // POST: Cadete/Editar/5
         [HttpPost]
-        public IActionResult Editar(ModificarPedidoViewModel pedidoViewModel)
+        public IActionResult Editar(ModificarPedidoViewModel pedidoView)
         {
-            Pedido pedido = _mapper.Map<Pedido>(pedidoViewModel);
-            pedido.Id = pedidoViewModel.IdPedido;///NO se Mapea solo
-            Cliente cliente = _mapper.Map<Cliente>(pedidoViewModel);
-            cliente.Id = pedidoViewModel.IdCliente;///NO se Mapea solo
-            // var pedidoRepo = new RepositorioPedidoSQLite();
+            Pedido pedido = _mapper.Map<Pedido>(pedidoView);
+            pedido.Id = pedidoView.IdPedido;///NO se Mapea solo
             _repoPed.Update(pedido);
+
+            Cliente cliente = _mapper.Map<Cliente>(pedidoView);
+            cliente.Id = pedidoView.IdCliente;///NO se Mapea solo
             _repoCli.Update(cliente);
+
             return RedirectToAction("Index");
         }
 
@@ -82,11 +91,11 @@ namespace cadAp2.Controllers
         public IActionResult ConfirmacionBorrar(int? id) 
         {
             if (id == null) 
-                return NotFound();//-------------------<<CONSULTA
+                return NotFound();
             var pedido = _repoPed.GetById(id);
             if (pedido == null)
                 return NotFound();
-            BorrarPedidoViewModel borrarView = _mapper.Map<BorrarPedidoViewModel>(pedido);
+            var borrarView = _mapper.Map<BorrarPedidoViewModel>(pedido);
             return View(borrarView);
         }
 
@@ -115,7 +124,9 @@ namespace cadAp2.Controllers
         [HttpPost]
         public IActionResult AsignarCadete(AsignarCadeteViewModel asignarView)
         {
-            _repoPed.AsignarCadete(asignarView);
+            int idCadete = asignarView.IdCadete;
+            int idPedido = asignarView.IdPedido;
+            _repoPed.AsignarCadeteAPedido(idCadete,idPedido);
             return RedirectToAction("Index");
         }
 

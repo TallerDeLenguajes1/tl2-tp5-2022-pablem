@@ -5,9 +5,9 @@ namespace Repositorios
 {
     public interface IRepositorioCadete
     {
-        int? ProxId();
+        int? GetLastId();
         Cadete? GetById(int? id);
-        List<MostrarCadeteViewModel>? GetAll();
+        List<Cadete>? GetAll();
         void Save(Cadete cadete);
         void Update(Cadete cadete);
         void Delete(int id);

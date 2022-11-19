@@ -6,7 +6,11 @@ namespace Models
         public int Id { get ; set ; }
         public string Detalle { get ; set ; }
         public EstadoPedido Estado { get ; set ; }
-        // public Cliente Cliente { get ; set ; }
+        public Cliente Cliente { get ; set ; }
+
+        public Pedido() {
+            Cliente = new Cliente();
+        }
 
         public string DetalleCorto()
         {

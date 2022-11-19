@@ -15,7 +15,6 @@ namespace cadAp2.Controllers
         private readonly IRepositorioCadete _repoCad;
         private readonly IRepositorioPedido _repoPed;
         private readonly IRepositorioCliente _repoCli;
-        //private readonly IConfiguration config;
 
         public CadeteController(ILogger<CadeteController> logger, IMapper mapper, IRepositorioCadete repoCad, IRepositorioPedido repoPed, IRepositorioCliente repoCli)//, IConfiguration config)
         {
@@ -24,18 +23,22 @@ namespace cadAp2.Controllers
             _repoCad = repoCad;
             _repoPed = repoPed;
             _repoCli = repoCli;
-            // this.config = config;
         }
 
         public IActionResult Index()
         {
-            var listaCadeteView = _repoCad.GetAll();
-            return View(listaCadeteView); 
+            var cadetes = _repoCad.GetAll();
+            var cadetesView = _mapper.Map<List<MostrarCadeteViewModel>>(cadetes);
+            foreach (var cadView in cadetesView)
+            {
+                cadView.NroPendientes = _repoPed.PedidosPorCadete(cadView.Id).Select(x => x.Estado = EstadoPedido.Viajando).Count();
+            }
+            return View(cadetesView); 
         }
 
         public IActionResult AltaCadete()
         {
-            ViewData["idCad"] = _repoCad.ProxId();
+            ViewData["idCad"] = _repoCad.GetLastId()+1;
             return View();
         }
 
@@ -52,7 +55,7 @@ namespace cadAp2.Controllers
         public IActionResult Editar(int? id)
         {
             if (id == null) 
-                return NotFound();//-------------------<<CONSULTA
+                return NotFound();
             var cadete = _repoCad.GetById(id);
             if (cadete == null)
                 return NotFound();
@@ -90,7 +93,7 @@ namespace cadAp2.Controllers
             return RedirectToAction("Index"); ///Si borro cadete los pedidos viajando pasan a pendientes 
         }
 
-        // GET: Cadete/AsignarCadete/5
+        // GET: Cadete/AsignarPedido/5
         public IActionResult AsignarPedido(int id)
         {
             var asignarView = new AsignarPedidoViewModel();
@@ -107,7 +110,9 @@ namespace cadAp2.Controllers
         [HttpPost]
         public IActionResult AsignarPedido(AsignarPedidoViewModel asignarView)
         {
-            _repoCad.AsignarPedido(asignarView);
+            var idCadete = asignarView.IdCadete;
+            var idPedido = asignarView.IdPedido;
+            _repoPed.AsignarCadeteAPedido(idCadete,idPedido);
             return RedirectToAction("Index");
         }
 

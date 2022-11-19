@@ -2,30 +2,9 @@ namespace Models
 {
     public class Cadete
     {
-        // int id;
-        // string nombre;
-        // string direccion;
-        // string telefono;
-        // List<Pedido> listaPedidos;
-
-        //Constructor
         public Cadete() {
             ListaPedidos = new List<Pedido>();
         }
-        // public Cadete(string nombre, string direccion, string telefono)
-        // {
-        //     this.id = 0;
-        //     this.nombre = nombre;
-        //     this.direccion = direccion;
-        //     this.telefono = telefono;
-        //     listaPedidos = new List<Pedido>();
-        // }
-        //Getters & Setters
-        // public int Id { get => id; set => id = value; }
-        // public string? Nombre { get => nombre; set => nombre = value; }
-        // public string? Direccion { get => direccion; set => direccion = value; }
-        // public string? Telefono { get => telefono; set => telefono = value; }
-        // public List<Pedido> ListaPedidos { get => listaPedidos; set => listaPedidos = value; }
 
         public int Id { get; set; }
         public string? Nombre { get; set; }
@@ -34,12 +13,6 @@ namespace Models
         public List<Pedido>? ListaPedidos { get; set; }
 
         //Métodos
-
-        public void agregarPedido(Pedido pedido) 
-        {
-            ListaPedidos?.Add(pedido);
-        }
-
         public int NroPendientes()
         {
             return ListaPedidos.Where(ped => ped.Estado == EstadoPedido.Viajando).Count();

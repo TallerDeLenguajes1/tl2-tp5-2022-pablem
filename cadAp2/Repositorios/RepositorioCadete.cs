@@ -23,13 +23,23 @@ namespace Repositorios
             return connection;
         }
 
-        public int? ProxId()
+        private static Cadete CrearCadete(SQLiteDataReader? reader)
+        {
+            var nuevo = new Cadete();
+            nuevo.Id = Convert.ToInt32(reader["id_cadete"]); //controles de rader != null && any?
+            nuevo.Nombre = reader["cadete"].ToString();
+            nuevo.Telefono = reader["telefono"].ToString();
+            nuevo.Direccion = reader["direccion"].ToString();
+            return nuevo;
+        }
+
+        public int? GetLastId()
         {
             try
             {
                 int idNuevo;
                 var connection = GetConnection();
-                var queryString = $"SELECT max(id_cadete)+1 FROM cadete;";
+                var queryString = $"SELECT max(id_cadete) FROM cadete;";
                 var comando = new SQLiteCommand(queryString, connection);
                 idNuevo = Convert.ToInt32(comando.ExecuteScalar());
                 connection.Close();
@@ -50,17 +60,13 @@ namespace Repositorios
                 var connection = GetConnection();
                 var queryString = $"SELECT * FROM cadete WHERE id_cadete = {id};";
                 var comando = new SQLiteCommand(queryString, connection);
-
-                var nuevo = new Cadete();
+                // Cadete nuevo;
+                Cadete? nuevo = null;
                 using (var reader = comando.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        nuevo = new Cadete();
-                        nuevo.Id = Convert.ToInt32(reader["id_cadete"]);
-                        nuevo.Nombre = reader["cadete"].ToString();
-                        nuevo.Telefono = reader["telefono"].ToString();
-                        nuevo.Direccion = reader["direccion"].ToString();
+                        nuevo = CrearCadete(reader);
                     }
                 }
                 connection.Close();
@@ -75,27 +81,24 @@ namespace Repositorios
             }
         }
 
-        public List<MostrarCadeteViewModel>? GetAll()
+        /*Optimizar consultas? en vez de hacer una consulta por cada cadete para recuperar el nro de
+        pedidos pendientes, podría hacer una sola consulta y guardar el número en un objeto 
+        de una nueva clase "CadetesConPedidos?" 
+        var queryString = "SELECT cadete.*, count(id_pedido) FROM  cadete LEFT JOIN (SELECT id_pedido, id_cadete FROM pedido WHERE estado = 'Viajando') USING(id_cadete) GROUP BY id_cadete;";*/
+        public List<Cadete>? GetAll()
         {
             try
             {
-                var listaCadetes = new List<MostrarCadeteViewModel>();
+                var listaCadetes = new List<Cadete>();
                 var connection = GetConnection();
-                // var queryString = "SELECT cadete.*, count(id_pedido) AS pedidos FROM cadete LEFT JOIN pedido USING(id_cadete) WHERE estado NOT IN ('Entregado', 'Anulado') OR estado IS NULL GROUP BY id_cadete;";
                 var queryString = "SELECT * FROM cadete;";
                 var comando = new SQLiteCommand(queryString, connection);
-
                 using (var reader = comando.ExecuteReader())
                 {
-                    MostrarCadeteViewModel nuevo;
+                    Cadete nuevo;
                     while (reader.Read())
                     {
-                        nuevo = new MostrarCadeteViewModel();
-                        nuevo.Id = Convert.ToInt32(reader["id_cadete"]);
-                        nuevo.Nombre = reader["cadete"].ToString();
-                        nuevo.Telefono = reader["telefono"].ToString();
-                        nuevo.Direccion = reader["direccion"].ToString();
-                        // nuevo.NroPendientes = Convert.ToInt32(reader["pendientes"]);
+                        nuevo = CrearCadete(reader);
                         listaCadetes.Add(nuevo);
                     }
                 }

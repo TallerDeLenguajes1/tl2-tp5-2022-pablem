@@ -22,6 +22,18 @@ namespace Repositorios
             return connection;
         }
 
+        public static Cliente CrearCliente(SQLiteDataReader reader)
+        {
+            Cliente nuevo = new Cliente();
+            nuevo.Id = Convert.ToInt32(reader["id_cliente"]);
+            nuevo.Nombre = reader["cliente"].ToString();
+            nuevo.Telefono = reader["telefono"].ToString();
+            nuevo.Direccion = reader["direccion"].ToString();
+            if (!reader.IsDBNull(reader.GetOrdinal("referencia_direccion")))
+                nuevo.ReferenciaDireccion = reader["referencia_direccion"].ToString()!;
+            return nuevo;
+        }
+
         public int? ProxId()
         {
             try
@@ -50,18 +62,13 @@ namespace Repositorios
                 var queryString = $"SELECT * FROM cliente WHERE id_cliente = {id};";
                 var comando = new SQLiteCommand(queryString, connection);
 
-                var nuevo = new Cliente();
+                // Cliente nuevo;
+                Cliente? nuevo = null;
                 using (var reader = comando.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        nuevo = new Cliente();
-                        nuevo.Id = Convert.ToInt32(reader["id_cliente"]);
-                        nuevo.Nombre = reader["cliente"].ToString();
-                        nuevo.Telefono = reader["telefono"].ToString();
-                        nuevo.Direccion = reader["direccion"].ToString();
-                        if (!reader.IsDBNull(reader.GetOrdinal("referencia_direccion")))
-                            nuevo.ReferenciaDireccion = reader["referencia_direccion"].ToString()!;
+                        nuevo = CrearCliente(reader);
                     }
                 }
                 connection.Close();
@@ -90,13 +97,7 @@ namespace Repositorios
                     Cliente nuevo;
                     while (reader.Read())
                     {
-                        nuevo = new Cliente();
-                        nuevo.Id = Convert.ToInt32(reader["id_cliente"]);
-                        nuevo.Nombre = reader["cliente"].ToString()!;
-                        nuevo.Telefono = reader["telefono"].ToString()!;
-                        nuevo.Direccion = reader["direccion"].ToString()!;
-                        if (!reader.IsDBNull(reader.GetOrdinal("referencia_direccion")))
-                            nuevo.ReferenciaDireccion = reader["referencia_direccion"].ToString()!;
+                        nuevo = CrearCliente(reader);
                         listaClientes.Add(nuevo);
                     }
                 }
