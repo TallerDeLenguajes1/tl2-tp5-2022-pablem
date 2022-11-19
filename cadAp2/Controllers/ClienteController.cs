@@ -87,9 +87,10 @@ namespace cadAp2.Controllers
 
         public IActionResult PedidosCliente(int id)
         {
-            ViewData["titulo"] = "Pedidos de " + _repoCli.GetById(id).Nombre; //esto es una prueba
-            var listaPedidosView = _repoPed.PedidosPorCliente(id);
-            return View(listaPedidosView);
+            var pedidosPorCliente = _repoPed.PedidosPorCliente(id);
+            ViewData["titulo"] = "Pedidos de " + pedidosPorCliente.First().Cliente.Nombre;
+            var pedidosView = _mapper.Map<List<MostrarPedidoViewModel>>(pedidosPorCliente);
+            return View(pedidosView);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

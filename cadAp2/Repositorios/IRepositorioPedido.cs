@@ -12,11 +12,11 @@ namespace Repositorios
         void Update(Pedido pedido);
         void Delete(int id);
 
-        List<MostrarPedidoViewModel>? PedidosPorCadete(int id); ////no van
-        List<MostrarPedidoViewModel>? PedidosPorCliente(int id);
+        List<Pedido>? PedidosPorCadete(int id); ////no van
+        List<Pedido>? PedidosPorCliente(int id);
 
         int ObtenerCadeteId(int idPedido);
-        void AsignarClienteAPedido(int idCliente, int idPedido);
+        
         void AsignarCadeteAPedido(int idCadete, int idPedido);
     }
 }

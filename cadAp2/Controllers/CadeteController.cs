@@ -103,7 +103,7 @@ namespace cadAp2.Controllers
             // if(listaPendientes != null && listaPendientes.Any())
             var listaPendientes = _repoPed.GetAll()?.Where(ped => ped.Estado == EstadoPedido.Pendiente);
             /**/
-            asignarView.Pedidos = new SelectList(listaPendientes, "Id", "DetalleCorto");
+            asignarView.Pedidos = new SelectList(listaPendientes, "Id", "Detalle");
             return View(asignarView);
         }
 
@@ -119,8 +119,9 @@ namespace cadAp2.Controllers
         public IActionResult PedidosCadete(int id)
         {
             ViewData["titulo"] = "Pedidos de " + _repoCad.GetById(id)!.Nombre;
-            var listaPedidosView = _repoPed.PedidosPorCadete(id);
-            return View(listaPedidosView);
+            var pedidosPorCadete = _repoPed.PedidosPorCadete(id);
+            var pedidosView = _mapper.Map<List<MostrarPedidoViewModel>>(pedidosPorCadete);
+            return View(pedidosView);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

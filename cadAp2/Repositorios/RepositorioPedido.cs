@@ -205,23 +205,6 @@ namespace Repositorios
             }
         }
 
-        public void AsignarClienteAPedido(int idCliente, int idPedido)
-        {
-            try
-            {
-                var connection = GetConnection();
-                var queryString = $"UPDATE pedido SET id_cliente = {idCliente} WHERE id_pedido = {idPedido};";
-                var comando = new SQLiteCommand(queryString, connection);
-                comando.ExecuteNonQuery();
-                connection.Close();
-            }
-            catch (Exception ex)
-            {
-                //N
-                Console.WriteLine(ex);
-            }
-        }
-
         public int ObtenerCadeteId(int idPedido)
         {
             try
@@ -252,27 +235,22 @@ namespace Repositorios
 
 
 
-        public List<MostrarPedidoViewModel>? PedidosPorCadete(int id)
+        public List<Pedido>? PedidosPorCadete(int id)
         {
             try
             {
-                var listaPedidos = new List<MostrarPedidoViewModel>();
-                var queryString = $"SELECT id_pedido, (SUBSTRING(detalle, 1, 15) || '...') AS detalleCorto, estado, cliente, direccion FROM pedido INNER JOIN cliente USING(id_cliente) WHERE id_cadete = {id};";
+                var listaPedidos = new List<Pedido>();
+                var queryString = $"SELECT * FROM pedido INNER JOIN cliente USING(id_cliente) INNER JOIN cadete USING(id_cadete) WHERE id_cadete = {id};";
                 var connection = GetConnection();
                 var comando = new SQLiteCommand(queryString, connection);
 
                 using (var reader = comando.ExecuteReader())
                 {
-                    MostrarPedidoViewModel nuevo;
+                    Pedido nuevo;
                     while (reader.Read())
                     {
-                        nuevo = new MostrarPedidoViewModel();
-                        nuevo.Id = Convert.ToInt32(reader["id_pedido"]);
-                        nuevo.DetalleCorto = reader["detalleCorto"].ToString();
-                        Enum.TryParse(reader["estado"].ToString(), out EstadoPedido estadoAux);
-                        nuevo.Estado = estadoAux;
-                        nuevo.NombreCliente = reader["cliente"].ToString();
-                        nuevo.Direccion = reader["direccion"].ToString();
+                        nuevo = CrearPedido(reader);
+                        nuevo.Cliente = CrearCliente(reader);
                         listaPedidos.Add(nuevo);
                     }
                 }
@@ -288,27 +266,22 @@ namespace Repositorios
             }
         }
 
-        public List<MostrarPedidoViewModel>? PedidosPorCliente(int id)
+        public List<Pedido>? PedidosPorCliente(int id)
         {
             try
             {
-                var listaPedidos = new List<MostrarPedidoViewModel>();
-                var queryString = $"SELECT id_pedido, (SUBSTRING(detalle, 1, 15) || '...') AS detalleCorto, estado, cliente, direccion FROM pedido INNER JOIN cliente USING(id_cliente) WHERE id_cliente = {id};";
+                var listaPedidos = new List<Pedido>();
+                var queryString = $"SELECT * FROM pedido INNER JOIN cliente USING(id_cliente) WHERE id_cliente = {id};";
                 var connection = GetConnection();
                 var comando = new SQLiteCommand(queryString, connection);
 
                 using (var reader = comando.ExecuteReader())
                 {
-                    MostrarPedidoViewModel nuevo;
+                    Pedido nuevo;
                     while (reader.Read())
                     {
-                        nuevo = new MostrarPedidoViewModel();
-                        nuevo.Id = Convert.ToInt32(reader["id_pedido"]);
-                        nuevo.DetalleCorto = reader["detalleCorto"].ToString();
-                        Enum.TryParse(reader["estado"].ToString(), out EstadoPedido estadoAux);
-                        nuevo.Estado = estadoAux;
-                        nuevo.NombreCliente = reader["cliente"].ToString();
-                        nuevo.Direccion = reader["direccion"].ToString();
+                        nuevo = CrearPedido(reader);
+                        nuevo.Cliente = CrearCliente(reader);
                         listaPedidos.Add(nuevo);
                     }
                 }
@@ -318,12 +291,11 @@ namespace Repositorios
             catch (Exception ex)
             {
                 //NLOG
-                Console.WriteLine("error recuperando pedidos por cadete");
+                Console.WriteLine("error recuperando pedidos por cliente");
                 Console.WriteLine(ex);
                 return null;
             }
         }
-
 
 
 
