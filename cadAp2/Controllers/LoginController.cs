@@ -8,7 +8,6 @@ using Microsoft.Extensions.Logging;
 
 namespace cadAp2.Controllers
 {
-    [Route("[controller]")]
     public class LoginController : Controller
     {
         private readonly ILogger<LoginController> _logger;
@@ -20,7 +19,7 @@ namespace cadAp2.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return View("../Index");//(?)
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

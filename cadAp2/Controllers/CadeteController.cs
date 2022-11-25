@@ -27,6 +27,9 @@ namespace cadAp2.Controllers
 
         public IActionResult Index()
         {
+            //recupero variable de sesion
+            //si es encargado redirect to action index principal
+            //si no tengo vble sesion a logeo 
             var cadetes = _repoCad.GetAll();
             var cadetesView = _mapper.Map<List<MostrarCadeteViewModel>>(cadetes);
             foreach (var cadView in cadetesView)

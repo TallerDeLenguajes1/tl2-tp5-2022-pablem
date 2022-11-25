@@ -3,6 +3,8 @@ namespace Models
     public enum RolUsuario
     {
         Administrador,
-        Cadete
+        Cadete,
+        Encargado,
+        Invitado
     }
 }
