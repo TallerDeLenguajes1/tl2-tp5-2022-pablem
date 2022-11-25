@@ -11,6 +11,7 @@ namespace ViewModels
         [StringLength(50, MinimumLength = 3)] 
         public string? NikName { get; set; }
         [Required]
+        // [Password]
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,15}$")]
         public string? Password { get; set; }
         

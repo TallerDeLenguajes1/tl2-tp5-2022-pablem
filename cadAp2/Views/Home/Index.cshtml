@@ -8,7 +8,6 @@
     @* <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p> *@
 
 </article>
-
 <h4> Inicie Sesión </h4>
 <hr />
 <article class="row">
@@ -23,7 +22,8 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="Password" class="control-label"></label>
-                    <input asp-for="Password" class="form-control">
+                    @* <input asp-for="Password" class="form-control"> *@
+                    <input type="password" asp-for="Password" class="form-control">
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
                 <div class="form-group">
@@ -34,3 +34,7 @@
         </form>
     </div>
 </article>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
