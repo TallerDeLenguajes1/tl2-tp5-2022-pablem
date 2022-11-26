@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Models;
+using ViewModels;
 
 namespace cadAp2.Controllers;
 
@@ -15,7 +16,6 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        List<Cadete> listaCadetes = new List<Cadete>();
         return View();
     }
 

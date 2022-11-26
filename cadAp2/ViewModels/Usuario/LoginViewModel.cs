@@ -13,6 +13,7 @@ namespace ViewModels
         public string? NikName { get; set; }
 
         [Required]
+        [Display(Name="Contraseña")]
         [DataType(DataType.Password)] 
         public string? Password { get; set; }
         

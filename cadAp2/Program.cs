@@ -18,6 +18,7 @@ builder.Services.AddSingleton<ICadenaDeConexion, CadenaParaSqlite>();
 builder.Services.AddTransient<IRepositorioCadete, RepositorioCadeteSQLite>();
 builder.Services.AddTransient<IRepositorioCliente, RepositorioClienteSQLite>();
 builder.Services.AddTransient<IRepositorioPedido, RepositorioPedidoSQLite>();
+builder.Services.AddTransient<IRepositorioUsuario, RepositorioUsuarioSQlite>();
 
 /* Auto Mapper Configurations  */
 var mapperConfig = new MapperConfiguration(cfg =>
@@ -31,6 +32,7 @@ builder.Services.AddSingleton(mapper);
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
+    options.Cookie.Name = ".MiSesion.Session";
     options.IdleTimeout = TimeSpan.FromMinutes(2);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;

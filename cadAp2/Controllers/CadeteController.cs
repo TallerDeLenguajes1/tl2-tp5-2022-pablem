@@ -93,7 +93,7 @@ namespace cadAp2.Controllers
             // if (id != null) 
             //     return NotFound();
             _repoCad.Delete(id);
-            return RedirectToAction("Index"); ///Si borro cadete los pedidos viajando pasan a pendientes 
+            return RedirectToAction("Index"); ///A mejorar Si borro cadete los pedidos viajando deberían pasan a pendientes 
         }
 
         // GET: Cadete/AsignarPedido/5

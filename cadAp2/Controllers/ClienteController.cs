@@ -53,7 +53,7 @@ namespace cadAp2.Controllers
             var cliente = _repoCli.GetById(id);
             if (cliente == null)
                 return NotFound();
-            ModificarClienteViewModel editarView = _mapper.Map<ModificarClienteViewModel>(cliente);
+            var editarView = _mapper.Map<ModificarClienteViewModel>(cliente);
             return View(editarView);
         }
 
