@@ -37,14 +37,19 @@ namespace cadAp2.Controllers
             var usuario = usuarios.SingleOrDefault(x => x.NikName == loginView.NikName && x.Password == loginView.Password, null);
             if(usuario != null)
             {
-                // TempData["mensaje"] = "Bienvenido a SeiYa Cadeterías " + usuario.NikName;
+                HttpContext.Session.SetString("user", usuario.NikName);
+                HttpContext.Session.SetString("rol", usuario.Rol.ToString());
                 return RedirectToAction("Index","Cadete");
             } else {
                 TempData["mensaje"] = "Nombre de usuario y/o contraseña incorrectos";
                 return View(loginView);
             }
-            
-            
+        }
+
+        public IActionResult LogOut()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Home");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

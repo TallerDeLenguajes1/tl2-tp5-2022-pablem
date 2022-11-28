@@ -25,11 +25,39 @@ namespace cadAp2.Controllers
             _repoCli = repoCli;
         }
 
+        /*Métodos para la validación de acceso por niveles de permisos*/
+        /*¿Inyeccion de dependencias? --> no me deja usar httpcontext estático, tiene que ser clase derivada de controller*/
+        // private readonly IHttpContextAccessor _httpContextAccessor;
+        // public ValidacionDeAcceso(IHttpContextAccessor httpContextAccessor)
+        // {
+        //     _httpContextAccessor = httpContextAccessor;
+        // }
+        private IActionResult AccionSinAcceso()
+        {
+            if(string.IsNullOrEmpty(HttpContext.Session.GetString("rol")))
+                return RedirectToAction("Index", "Login");
+
+            return null;
+        }
+        private IActionResult AccionAccesoRestringido() 
+        {
+            if (AccionSinAcceso() == null)
+            {
+                if (HttpContext.Session.GetString("rol") != RolUsuario.Administrador.ToString()) 
+                {
+                    TempData["mensaje"] = "No tiene acceso al menu para modificar, guardar o eliminar cadetes";
+                    return RedirectToAction("Index");
+                }
+            }
+            return null;
+        }
+        /*Fin vlidacion de accesos*/
+
         public IActionResult Index()
         {
-            //recupero variable de sesion
-            //si es encargado redirect to action index principal
-            //si no tengo vble sesion a logeo 
+            if (AccionSinAcceso() != null)
+                return AccionSinAcceso();
+
             var cadetes = _repoCad.GetAll();
             var cadetesView = _mapper.Map<List<MostrarCadeteViewModel>>(cadetes);
             foreach (var cadView in cadetesView)
@@ -41,14 +69,21 @@ namespace cadAp2.Controllers
 
         public IActionResult AltaCadete()
         {
-            ViewData["idCad"] = _repoCad.GetLastId()+1;
+            if (AccionAccesoRestringido() != null)
+                return AccionAccesoRestringido();
+
+            ViewData["idCad"] = _repoCad.GetLastId() + 1;
             return View();
         }
+
 
         [HttpPost]
         public IActionResult GuardarCadete(AltaCadeteViewModel cadeteViewModel) 
         {
             //if(ModelState.IsValid)//---------------------> ? CONSULTA
+            if (AccionAccesoRestringido() != null)
+                return AccionAccesoRestringido();
+
             var cadete = _mapper.Map<Cadete>(cadeteViewModel);
             _repoCad.Save(cadete);
             return RedirectToAction("Index");
@@ -57,6 +92,9 @@ namespace cadAp2.Controllers
         // GET: Cadete/Editar/5
         public IActionResult Editar(int? id)
         {
+            if (AccionAccesoRestringido() != null)
+                return AccionAccesoRestringido();
+
             if (id == null) 
                 return NotFound();
             var cadete = _repoCad.GetById(id);
@@ -69,6 +107,9 @@ namespace cadAp2.Controllers
         [HttpPost]
         public IActionResult Editar(ModificarCadeteViewModel cadeteViewModel)
         {
+            if (AccionAccesoRestringido() != null)
+                return AccionAccesoRestringido();
+
             var cadete = _mapper.Map<Cadete>(cadeteViewModel);
             _repoCad.Update(cadete);
             return RedirectToAction("Index");
@@ -76,6 +117,9 @@ namespace cadAp2.Controllers
 
         public IActionResult ConfirmacionBorrar(int? id) 
         {
+            if (AccionAccesoRestringido() != null)
+                return AccionAccesoRestringido();
+
             if (id == null) 
                 return NotFound();
             var cadete = _repoCad.GetById(id);
@@ -90,15 +134,21 @@ namespace cadAp2.Controllers
         // [HttpPost] ??
         public IActionResult BorrarCadete(int id)
         {
+            if (AccionAccesoRestringido() != null)
+                return AccionAccesoRestringido();
+            
             // if (id != null) 
             //     return NotFound();
             _repoCad.Delete(id);
-            return RedirectToAction("Index"); ///A mejorar Si borro cadete los pedidos viajando deberían pasan a pendientes 
+            return RedirectToAction("Index"); ///A mejorar: Si borro cadete los pedidos viajando deberían pasan a pendientes 
         }
 
         // GET: Cadete/AsignarPedido/5
         public IActionResult AsignarPedido(int id)
         {
+           if (AccionSinAcceso() != null)
+                return AccionSinAcceso();
+            
             var asignarView = new AsignarPedidoViewModel();
             asignarView.IdCadete = id;
             /*creo una select list con pedidos*/
@@ -113,6 +163,9 @@ namespace cadAp2.Controllers
         [HttpPost]
         public IActionResult AsignarPedido(AsignarPedidoViewModel asignarView)
         {
+            if (AccionSinAcceso() != null)
+                return AccionSinAcceso();
+            
             var idCadete = asignarView.IdCadete;
             var idPedido = asignarView.IdPedido;
             _repoPed.AsignarCadeteAPedido(idCadete,idPedido);
@@ -121,6 +174,9 @@ namespace cadAp2.Controllers
 
         public IActionResult PedidosCadete(int id)
         {
+            if (AccionSinAcceso() != null)
+                return AccionSinAcceso();
+            
             ViewData["titulo"] = "Pedidos de " + _repoCad.GetById(id)!.Nombre;
             var pedidosPorCadete = _repoPed.PedidosPorCadete(id);
             var pedidosView = _mapper.Map<List<MostrarPedidoViewModel>>(pedidosPorCadete);

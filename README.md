@@ -19,5 +19,11 @@ https://www.nuget.org/packages/System.Data.SQLite/
 # Trabajo Práctico N° 8
 + Logueo y variables de sesión
 
+    (usuarios)
+
+    admin : admin -> full acceso
+    
+    encargado : encargado -> acceso restringido: no puede crear, borrar o modificar
+
 ctrl+shift+p nuget add package: microsoft.aspnetcore.sessions 2.2.0
 https://learn.microsoft.com/es-es/aspnet/core/fundamentals/app-state?view=aspnetcore-7.0#session-state

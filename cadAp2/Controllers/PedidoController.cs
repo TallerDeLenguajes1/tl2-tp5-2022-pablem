@@ -25,8 +25,34 @@ namespace cadAp2.Controllers
             _repoCli = repoCli;
         }
 
+        /*Métodos para la validación de acceso por niveles de permisos*/
+        /*¿Inyeccion de dependencias? --> no me deja usar httpcontext estático, tiene que ser clase derivada de controller*/
+        private IActionResult AccionSinAcceso()
+        {
+            if(string.IsNullOrEmpty(HttpContext.Session.GetString("rol")))
+                return RedirectToAction("Index", "Login");
+
+            return null;
+        }
+        private IActionResult AccionAccesoRestringido() 
+        {
+            if (AccionSinAcceso() == null)
+            {
+                if (HttpContext.Session.GetString("rol") != RolUsuario.Administrador.ToString()) 
+                {
+                    TempData["mensaje"] = "No tiene acceso al menu para modificar, guardar o eliminar pedidos";
+                    return RedirectToAction("Index");
+                }
+            }
+            return null;
+        }
+        /*Fin vlidacion de accesos*/
+
         public IActionResult Index()
         {
+            if (AccionSinAcceso() != null)
+                return AccionSinAcceso();
+
             var pedidos = _repoPed.GetAll();
             var pedidosView = _mapper.Map<List<MostrarPedidoViewModel>>(pedidos);
             // foreach (var pedView in pedidosView)
@@ -38,6 +64,9 @@ namespace cadAp2.Controllers
 
         public IActionResult Alta()
         {
+            if (AccionAccesoRestringido() != null)
+                return AccionAccesoRestringido();
+
             ViewData["idPed"] = _repoPed.GetLastId()+1;
             /*se recuperan los clientes para construir una select list item*/
             var listaClientes = _repoCli.GetAll();
@@ -51,6 +80,9 @@ namespace cadAp2.Controllers
         [HttpPost]
         public IActionResult GuardarPedido(AltaPedidoViewModel pedidoView) 
         {
+            if (AccionAccesoRestringido() != null)
+                return AccionAccesoRestringido();
+
             var idCliente = pedidoView.IdCliente;
             var nuevoPedido = _mapper.Map<Pedido>(pedidoView);
             _repoPed.Save(nuevoPedido, idCliente);
@@ -60,6 +92,9 @@ namespace cadAp2.Controllers
         // GET: Pedido/Editar/5
         public IActionResult Editar(int? id)
         {
+            if (AccionAccesoRestringido() != null)
+                return AccionAccesoRestringido();
+
             if (id == null) 
                 return NotFound();
 
@@ -76,6 +111,9 @@ namespace cadAp2.Controllers
         [HttpPost]
         public IActionResult Editar(ModificarPedidoViewModel pedidoView)
         {
+            if (AccionAccesoRestringido() != null)
+                return AccionAccesoRestringido();
+
             Pedido pedido = _mapper.Map<Pedido>(pedidoView);
             pedido.Id = pedidoView.IdPedido;///NO se Mapea solo
             _repoPed.Update(pedido);
@@ -90,6 +128,9 @@ namespace cadAp2.Controllers
         // GET: Pedido/ConfirmacionBorrar/5
         public IActionResult ConfirmacionBorrar(int? id) 
         {
+            if (AccionAccesoRestringido() != null)
+                return AccionAccesoRestringido();
+
             if (id == null) 
                 return NotFound();
             var pedido = _repoPed.GetById(id);
@@ -102,6 +143,9 @@ namespace cadAp2.Controllers
         // [HttpGet]
         public IActionResult Borrar(int id) 
         {
+            if (AccionAccesoRestringido() != null)
+                return AccionAccesoRestringido();
+
             // if (id != null) 
             //     return NotFound();
             _repoPed.Delete(id);
@@ -111,6 +155,9 @@ namespace cadAp2.Controllers
         // GET: Pedido/AsignarCadete/5
         public IActionResult AsignarCadete(int id)
         {
+            if (AccionSinAcceso() != null)
+                return AccionSinAcceso();
+
             var asignarView = new AsignarCadeteViewModel();
             asignarView.IdPedido = id;
             /*creo una select list con cadetes*/
@@ -124,6 +171,9 @@ namespace cadAp2.Controllers
         [HttpPost]
         public IActionResult AsignarCadete(AsignarCadeteViewModel asignarView)
         {
+            if (AccionSinAcceso() != null)
+                return AccionSinAcceso();
+                
             int idCadete = asignarView.IdCadete;
             int idPedido = asignarView.IdPedido;
             _repoPed.AsignarCadeteAPedido(idCadete,idPedido);
