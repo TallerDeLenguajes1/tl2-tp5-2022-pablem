@@ -295,7 +295,34 @@ namespace Repositorios
             }
         }
 
-
+        public Cadete ObtenerCadete(int id)
+        {
+            try
+            {
+                var connection = GetConnection();
+                var queryString = $"SELECT C.* FROM pedido INNER JOIN cadete C USING (id_cadete) WHERE id_pedido = {id} LIMIT 1;";
+                var comando = new SQLiteCommand(queryString, connection);
+                // Cadete nuevo;
+                Cadete? nuevo = null;
+                using (var reader = comando.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        nuevo = new Cadete();
+                        nuevo.Nombre = reader["cadete"].ToString();
+                    }
+                }
+                connection.Close();
+                return nuevo;
+            }
+            catch (Exception ex)
+            {
+                //NLOG
+                Console.WriteLine("get cadeteid error");
+                Console.WriteLine(ex);
+                return null;
+            }
+        }
 
 
 

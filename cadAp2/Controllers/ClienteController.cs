@@ -7,7 +7,7 @@ using Repositorios;
 
 namespace cadAp2.Controllers
 {
-    public class ClienteController : Controller
+    public class ClienteController : ControllerConValidacionAcceso
     {
         private readonly IMapper _mapper;
         private readonly ILogger<ClienteController> _logger;
@@ -15,7 +15,11 @@ namespace cadAp2.Controllers
         private readonly IRepositorioPedido _repoPed;
         private readonly IRepositorioCliente _repoCli;
 
-        public ClienteController(ILogger<ClienteController> logger, IMapper mapper, IRepositorioCadete repoCad, IRepositorioPedido repoPed, IRepositorioCliente repoCli)
+        public ClienteController(ILogger<ClienteController> logger, 
+                                IMapper mapper, 
+                                IRepositorioCadete repoCad, 
+                                IRepositorioPedido repoPed, 
+                                IRepositorioCliente repoCli)
         {
             _logger = logger;
             _mapper = mapper;
@@ -23,29 +27,6 @@ namespace cadAp2.Controllers
             _repoPed = repoPed;
             _repoCli = repoCli;
         }
-
-        /*Métodos para la validación de acceso por niveles de permisos*/
-        /*¿Inyeccion de dependencias? --> no me deja usar httpcontext estático, tiene que ser clase derivada de controller*/
-        private IActionResult AccionSinAcceso()
-        {
-            if(string.IsNullOrEmpty(HttpContext.Session.GetString("rol")))
-                return RedirectToAction("Index", "Login");
-
-            return null;
-        }
-        private IActionResult AccionAccesoRestringido() 
-        {
-            if (AccionSinAcceso() == null)
-            {
-                if (HttpContext.Session.GetString("rol") != RolUsuario.Administrador.ToString()) 
-                {
-                    TempData["mensaje"] = "No tiene acceso al menu para modificar, guardar o eliminar clientes";
-                    return RedirectToAction("Index");
-                }
-            }
-            return null;
-        }
-        /*Fin vlidacion de accesos*/
 
         public IActionResult Index()
         {

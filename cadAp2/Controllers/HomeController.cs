@@ -16,6 +16,12 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
+        if(string.IsNullOrEmpty(HttpContext.Session.GetString("user")))
+        {
+            ViewData["bienvenida"] = "";
+        } else {
+            ViewData["bienvenida"] = "Te damos la bienvenida " + HttpContext.Session.GetString("user");
+        }
         return View();
     }
 

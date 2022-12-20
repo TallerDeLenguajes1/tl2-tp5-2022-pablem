@@ -8,7 +8,7 @@ using Repositorios;
 
 namespace cadAp2.Controllers
 {
-    public class PedidoController : Controller
+    public class PedidoController : ControllerConValidacionAcceso
     {
         private readonly ILogger<PedidoController> _logger;
         private readonly IMapper _mapper;
@@ -16,7 +16,11 @@ namespace cadAp2.Controllers
         private readonly IRepositorioPedido _repoPed;
         private readonly IRepositorioCliente _repoCli;
 
-        public PedidoController(ILogger<PedidoController> logger, IMapper mapper, IRepositorioCadete repoCad, IRepositorioPedido repoPed, IRepositorioCliente repoCli)
+        public PedidoController(ILogger<PedidoController> logger, 
+                                IMapper mapper, 
+                                IRepositorioCadete repoCad, 
+                                IRepositorioPedido repoPed, 
+                                IRepositorioCliente repoCli)
         {
             _logger = logger;
             _mapper = mapper;
@@ -25,29 +29,6 @@ namespace cadAp2.Controllers
             _repoCli = repoCli;
         }
 
-        /*Métodos para la validación de acceso por niveles de permisos*/
-        /*¿Inyeccion de dependencias? --> no me deja usar httpcontext estático, tiene que ser clase derivada de controller*/
-        private IActionResult AccionSinAcceso()
-        {
-            if(string.IsNullOrEmpty(HttpContext.Session.GetString("rol")))
-                return RedirectToAction("Index", "Login");
-
-            return null;
-        }
-        private IActionResult AccionAccesoRestringido() 
-        {
-            if (AccionSinAcceso() == null)
-            {
-                if (HttpContext.Session.GetString("rol") != RolUsuario.Administrador.ToString()) 
-                {
-                    TempData["mensaje"] = "No tiene acceso al menu para modificar, guardar o eliminar pedidos";
-                    return RedirectToAction("Index");
-                }
-            }
-            return null;
-        }
-        /*Fin vlidacion de accesos*/
-
         public IActionResult Index()
         {
             if (AccionSinAcceso() != null)
@@ -55,10 +36,11 @@ namespace cadAp2.Controllers
 
             var pedidos = _repoPed.GetAll();
             var pedidosView = _mapper.Map<List<MostrarPedidoViewModel>>(pedidos);
-            // foreach (var pedView in pedidosView)
-            // {
-            //     pedView.NombreCadete = _repoPed.ObtenerCadete(pedView.Id);
-            // }////(posible mejora)
+            foreach (var pedView in pedidosView)
+            {
+                Cadete cad = _repoPed.ObtenerCadete(pedView.Id);
+                pedView.NombreCadete = (cad != null) ? cad.Nombre : "";
+            }
             return View(pedidosView);
         }
 

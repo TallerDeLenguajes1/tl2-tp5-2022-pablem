@@ -16,5 +16,6 @@ namespace Repositorios
 
         int ObtenerCadeteId(int idPedido);
         void AsignarCadeteAPedido(int idCadete, int idPedido);
+        Cadete ObtenerCadete(int id);
     }
 }

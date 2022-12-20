@@ -31,7 +31,7 @@ namespace cadAp2.Controllers
         [HttpPost]
         public IActionResult Index(LoginViewModel loginView)
         {
-            var usuarios = _repoUser.GetAll(); //decision de diseño? traigo todos los usuarios y compruebo usuario y pass desde el controlador o lo hago desde la bd
+            var usuarios = _repoUser.GetAll(); 
             if(usuarios == null || !usuarios.Any())
                 return NotFound();
             var usuario = usuarios.SingleOrDefault(x => x.NikName == loginView.NikName && x.Password == loginView.Password, null);
@@ -39,7 +39,7 @@ namespace cadAp2.Controllers
             {
                 HttpContext.Session.SetString("user", usuario.NikName);
                 HttpContext.Session.SetString("rol", usuario.Rol.ToString());
-                return RedirectToAction("Index","Cadete");
+                return RedirectToAction("Index","Home");
             } else {
                 TempData["mensaje"] = "Nombre de usuario y/o contraseña incorrectos";
                 return View(loginView);

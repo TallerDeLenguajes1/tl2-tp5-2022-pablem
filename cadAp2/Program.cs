@@ -1,6 +1,7 @@
 
 using AutoMapper;
 using CadenasDeconexion;
+using cadAp2.Controllers;
 using Repositorios;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,7 +12,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddMvc();
 // builder.Services.AddControllers();
-// builder.Services.AddLogging();
+builder.Services.AddLogging();
 
 /*Inyección Repositorios*/
 builder.Services.AddSingleton<ICadenaDeConexion, CadenaParaSqlite>();
@@ -33,7 +34,7 @@ builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
     options.Cookie.Name = ".MiSesion.Session";
-    options.IdleTimeout = TimeSpan.FromMinutes(1);
+    options.IdleTimeout = TimeSpan.FromMinutes(10);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
