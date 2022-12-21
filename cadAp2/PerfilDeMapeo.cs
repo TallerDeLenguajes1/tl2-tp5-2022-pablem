@@ -18,11 +18,10 @@ public class PerfilDeMapeo : Profile
         CreateMap<MostrarPedidoViewModel, Pedido>().ReverseMap()
             .ForMember(dest => dest.NombreCliente, opt => opt.MapFrom(src => src.Cliente.Nombre))
             .ForMember(dest => dest.Direccion, opt => opt.MapFrom(src => src.Cliente.Direccion));
-
-        /*Pedido.Clientes*/
+            /*Pedido.Clientes Modificacion*/
         CreateMap<ModificarPedidoViewModel, Pedido>().ReverseMap()
-            .ForMember(dest => dest.IdPedido, opt => opt.MapFrom(src => src.Id))///NO se Mapea
-            .ForMember(dest => dest.IdCliente, opt => opt.MapFrom(src => src.Cliente.Id))///NO se Mapea
+            .ForMember(dest => dest.IdPedido, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.IdCliente, opt => opt.MapFrom(src => src.Cliente.Id))
             .ForMember(dest => dest.Nombre, opt => opt.MapFrom(src => src.Cliente.Nombre))
             .ForMember(dest => dest.Direccion, opt => opt.MapFrom(src => src.Cliente.Direccion))
             .ForMember(dest => dest.Telefono, opt => opt.MapFrom(src => src.Cliente.Telefono))
@@ -35,7 +34,7 @@ public class PerfilDeMapeo : Profile
         CreateMap<ModificarClienteViewModel, Cliente>().ReverseMap();
 
         CreateMap<ModificarPedidoViewModel, Cliente>()
-            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.IdCliente));///NO se Mapea
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.IdCliente));
 
 
 

@@ -84,12 +84,9 @@ namespace cadAp2.Controllers
             if (pedido == null)
                 return NotFound();
             var pedidoView = _mapper.Map<ModificarPedidoViewModel>(pedido);
-            pedidoView.IdPedido = pedido.Id;///NO se Mapea solo
-            pedidoView.IdCliente = pedido.Cliente.Id;///NO se Mapea solo
             return View(pedidoView);
         }
 
-        // POST: Cadete/Editar/5
         [HttpPost]
         public IActionResult Editar(ModificarPedidoViewModel pedidoView)
         {
@@ -97,11 +94,9 @@ namespace cadAp2.Controllers
                 return AccionAccesoRestringido();
 
             Pedido pedido = _mapper.Map<Pedido>(pedidoView);
-            pedido.Id = pedidoView.IdPedido;///NO se Mapea solo
             _repoPed.Update(pedido);
 
             Cliente cliente = _mapper.Map<Cliente>(pedidoView);
-            cliente.Id = pedidoView.IdCliente;///NO se Mapea solo
             _repoCli.Update(cliente);
 
             return RedirectToAction("Index");
@@ -128,8 +123,6 @@ namespace cadAp2.Controllers
             if (AccionAccesoRestringido() != null)
                 return AccionAccesoRestringido();
 
-            // if (id != null) 
-            //     return NotFound();
             _repoPed.Delete(id);
             return RedirectToAction("Index");
         }

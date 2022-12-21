@@ -118,6 +118,11 @@ namespace cadAp2.Controllers
             var pedidosPorCliente = _repoPed.PedidosPorCliente(id);
             ViewData["titulo"] = "Pedidos de " + pedidosPorCliente.First().Cliente.Nombre;
             var pedidosView = _mapper.Map<List<MostrarPedidoViewModel>>(pedidosPorCliente);
+            foreach (var pedView in pedidosView)
+            {
+                Cadete cad = _repoPed.ObtenerCadete(pedView.Id);
+                pedView.NombreCadete = (cad != null) ? cad.Nombre : "";
+            }
             return View(pedidosView);
         }
 

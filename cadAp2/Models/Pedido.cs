@@ -17,11 +17,6 @@ namespace Models
             return (Detalle.Length < 16) ? Detalle : Detalle.Remove(12)+"...";
         }
 
-        // public string mostrar()
-        // {
-        //     return $"+ Pedido: {id} - Cliente: {cliente.Nombre} - Estado: {estado}";
-        // }
-
 
     }
 }

@@ -194,7 +194,6 @@ namespace cadAp2.Controllers
             var asignarView = new AsignarPedidoViewModel();
             asignarView.IdCadete = id;
             /*creo una select list con pedidos*/
-            // var listaPendientes = repoPedido.GetPendientes();
             // if(listaPendientes != null && listaPendientes.Any())
             var listaPendientes = _repoPed.GetAll()?.Where(ped => ped.Estado == EstadoPedido.Pendiente);
             /**/
