@@ -31,92 +31,158 @@ namespace cadAp2.Controllers
 
         public IActionResult Index()
         {
-            if (AccionSinAcceso() != null)
-                return AccionSinAcceso();
-
-            var cadetes = _repoCad.GetAll();
-            var cadetesView = _mapper.Map<List<MostrarCadeteViewModel>>(cadetes);
-            foreach (var cadView in cadetesView)
+            try
             {
-                cadView.NroPendientes = _repoPed.PedidosPorCadete(cadView.Id).Select(x => x.Estado = EstadoPedido.Viajando).Count();
+                if (AccionSinAcceso() != null)
+	                return AccionSinAcceso();
+	
+	            var cadetes = _repoCad.GetAll();
+	            var cadetesView = _mapper.Map<List<MostrarCadeteViewModel>>(cadetes);
+	            foreach (var cadView in cadetesView)
+	            {
+	                cadView.NroPendientes = _repoPed.PedidosPorCadete(cadView.Id).Select(x => x.Estado = EstadoPedido.Viajando).Count();
+	            }
+	            return View(cadetesView); 
             }
-            return View(cadetesView); 
+            catch (System.Exception ex)
+            {
+                _logger.LogWarning(ex,"Index: Lista de cadetes");
+                return View("/Views/Home/Error.cshtml");
+            }
         }
 
         public IActionResult AltaCadete()
         {
-            if (AccionAccesoRestringido() != null)
-                return AccionAccesoRestringido();
-
-            ViewData["idCad"] = _repoCad.GetLastId() + 1;
-            return View();
+            try
+            {
+                if (AccionAccesoRestringido() != null)
+	                return AccionAccesoRestringido();
+	
+	            ViewData["idCad"] = _repoCad.GetLastId() + 1;
+	            return View();
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogWarning(ex,"Alta cadete formulario");
+                return View("/Views/Home/Error.cshtml");
+            }
         }
-
 
         [HttpPost]
         public IActionResult GuardarCadete(AltaCadeteViewModel cadeteViewModel) 
         {
-            //if(ModelState.IsValid)//---------------------> ? CONSULTA
-            if (AccionAccesoRestringido() != null)
-                return AccionAccesoRestringido();
-
-            var cadete = _mapper.Map<Cadete>(cadeteViewModel);
-            _repoCad.Save(cadete);
-            return RedirectToAction("Index");
+            try
+            {
+                if (AccionAccesoRestringido() != null)
+                    return AccionAccesoRestringido();
+                
+                var cadete = _mapper.Map<Cadete>(cadeteViewModel);
+                _repoCad.Save(cadete);
+                return RedirectToAction("Index");
+            }
+            catch (System.Exception ex)
+            { 
+                _logger.LogWarning(ex,"No se guardó el cadete");   
+                return View("/Views/Home/Error.cshtml");
+            }
         }
 
         // GET: Cadete/Editar/5
         public IActionResult Editar(int? id)
         {
-            if (AccionAccesoRestringido() != null)
-                return AccionAccesoRestringido();
+            try
+            {
+                if (AccionAccesoRestringido() != null)
+	                return AccionAccesoRestringido();
+	
+	            if (id == null) 
+                {
+                    _logger.LogWarning("Editar cadete sin ID");   
+                    return View("/Views/Home/Error.cshtml");
+                }
 
-            if (id == null) 
-                return NotFound();
-            var cadete = _repoCad.GetById(id);
-            if (cadete == null)
-                return NotFound();
-            ModificarCadeteViewModel editarView = _mapper.Map<ModificarCadeteViewModel>(cadete);
-            return View(editarView);
+	            var cadete = _repoCad.GetById(id);
+	            if (cadete == null)
+	            {
+                    _logger.LogWarning($"Editar: no se encontró cadete con ID {id}");   
+                    return View("/Views/Home/Error.cshtml");
+                }
+
+	            ModificarCadeteViewModel editarView = _mapper.Map<ModificarCadeteViewModel>(cadete);
+	            return View(editarView);
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogWarning(ex,"Editar cadete formulario");
+                return View("/Views/Home/Error.cshtml");
+            }
         }
 
         [HttpPost]
         public IActionResult Editar(ModificarCadeteViewModel cadeteViewModel)
         {
-            if (AccionAccesoRestringido() != null)
-                return AccionAccesoRestringido();
-
-            var cadete = _mapper.Map<Cadete>(cadeteViewModel);
-            _repoCad.Update(cadete);
-            return RedirectToAction("Index");
+            try
+            {
+                if (AccionAccesoRestringido() != null)
+	                return AccionAccesoRestringido();
+	
+	            var cadete = _mapper.Map<Cadete>(cadeteViewModel);
+	            _repoCad.Update(cadete);
+	            return RedirectToAction("Index");
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogWarning(ex,"No se editó el cadete");
+                return View("/Views/Home/Error.cshtml");
+            }
         }
 
         public IActionResult ConfirmacionBorrar(int? id) 
         {
-            if (AccionAccesoRestringido() != null)
-                return AccionAccesoRestringido();
-
-            if (id == null) 
-                return NotFound();
-            var cadete = _repoCad.GetById(id);
-            
-            if (cadete == null)
-                return NotFound();
-
-            BorrarCadeteViewModel borrarView = _mapper.Map<BorrarCadeteViewModel>(cadete);
-            return View(borrarView);
+            try
+            {
+                if (AccionAccesoRestringido() != null)
+	                return AccionAccesoRestringido();
+	
+	            if (id == null) 
+	            {
+	                _logger.LogWarning("Borrar cadete sin ID");   
+	                return View("/Views/Home/Error.cshtml");
+	            }
+	            var cadete = _repoCad.GetById(id);
+	            
+	            if (cadete == null)
+	            {
+	                _logger.LogWarning($"Borrar: no se encontró cadete con ID {id}");   
+	                return View("/Views/Home/Error.cshtml");
+	            }
+	
+	            BorrarCadeteViewModel borrarView = _mapper.Map<BorrarCadeteViewModel>(cadete);
+	            return View(borrarView);
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogWarning(ex,"Confirmación para borrar cadete");
+                return View("/Views/Home/Error.cshtml");
+            }
         }
 
-        // [HttpPost] ??
+        // [HttpPost]
         public IActionResult BorrarCadete(int id)
         {
-            if (AccionAccesoRestringido() != null)
-                return AccionAccesoRestringido();
-            
-            // if (id != null) 
-            //     return NotFound();
-            _repoCad.Delete(id);
-            return RedirectToAction("Index"); ///A mejorar: Si borro cadete los pedidos viajando deberían pasan a pendientes 
+            try
+            {
+                if (AccionAccesoRestringido() != null)
+                        return AccionAccesoRestringido();
+                        
+                    _repoCad.Delete(id);
+                    return RedirectToAction("Index"); 
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogWarning(ex,"No se borró el cadete");
+                return View("/Views/Home/Error.cshtml");
+            }
         }
 
         // GET: Cadete/AsignarPedido/5
